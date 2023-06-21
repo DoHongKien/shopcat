@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<table class="table table-triped table-hover mt-3">
+    <thead>
+    <tr>
+        <th>Tên sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Giá tiền(VNĐ)</th>
+        <th>Nguồn gốc</th>
+        <th>Tuổi thọ</th>
+        <th>Ngày bán</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="product: ${productListInventory}">
+        <td>[[${product.name}]]</td>
+        <td>[[${product.quantity}]]</td>
+        <td>[[${product.price}]]</td>
+        <td>[[${product.origin}]]</td>
+        <td>[[${product.lifespan}]]</td>
+        <td>[[${product.createdDate}]]</td>
+        <td>
+            <a th:href="@{/promotion/sale/{id}(id=${product.id})}" class="btn btn-outline-success">Sale</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form th:action="@{/statistics}" class="form-inline">
+            Search:
+            <select class="form-select" th:name="month">
+                <option th:each="month: ${months}" th:value="${month}">[[${month}]]</option>
+            </select>
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+            <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+        </form>
+
+        <table class="table table-triped table-hover table-bordered mt-3">
+            <thead class="thead-light">
+            <tr>
+                <th>Id</th>
+                <th>Tên sản phẩm</th>
+                <th>Tổng sản phẩm bán được</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="product: ${productTopSellingMonth}">
+                <td>[[${product.id}]]</td>
+                <td>[[${product.productName}]]</td>
+                <td>[[${product.quantity}]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-6">
+
+        <form th:action="@{/statistics}" class="form-inline">
+            Search:
+            <input type="date" th:name="week" class="form-control"
+                   placeholder="Tìm kiếm..."
+            >
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+            <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+        </form>
+
+        <table class="table table-triped table-hover table-bordered mt-3">
+            <thead class="thead-light">
+            <tr>
+                <th>Id</th>
+                <th>Tên sản phẩm</th>
+                <th>Tổng sản phẩm bán được</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="product: ${productTopSellingWeek}">
+                <td>[[${product.id}]]</td>
+                <td>[[${product.productName}]]</td>
+                <td>[[${product.quantity}]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+</svg>
+
+<div th:if="${message != null}">
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"/>
+        </svg>
+        <div>[[${message}]]</div>
+    </div>
+</div>
+
+<div class="container row mt-5">
+    <div class="col-4">
+        <form th:action="@{/products/page/1}" class="form-inline">
+            Search:
+            <input type="search" name="keyword" class="form-control" th:value="${keyword}"
+                   placeholder="Tìm kiếm..."
+            >&nbsp;
+            <div class="row">
+                <div class="col-6">
+                    <input type="search" class="form-control" name="min" th:value="${min}"
+                           placeholder="Nhập giá min">
+                </div>
+                <div class="col-6">
+                    <input type="search" class="form-control" name="max" th:value="${max}"
+                           placeholder="Nhập giá max">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+            <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+        </form>
+    </div>
+
+    <div class="col-8">
+        <a th:href="@{/products/viewadd}" class="btn btn-info">Add</a>
+        <table class="table table-triped table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tên</th>
+                <th>Số lượng</th>
+                <th>Giá tiền(VNĐ)</th>
+                <th>Nguồn gốc</th>
+                <th>Thể loại</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="cat: ${listProduct}">
+                <td>[[${cat.id}]]</td>
+                <td>[[${cat.name}]]</td>
+                <td>[[${cat.quantity}]]</td>
+                <td>[[${cat.price}]]</td>
+                <td>[[${cat.origin}]]</td>
+                <td>[[${cat.category}]]</td>
+                <td>[[${cat.status}]]</td>
+                <td>
+                    <a th:href="@{/products/detail/{id}(id=${cat.id})}" class="btn btn-primary">Chi tiết</a>
+                    <a th:href="@{/products/delete/{id}(id=${cat.id})}" class="btn btn-danger"
+                       onclick="return confirm('Bạn chắc chắn muốn xóa sản phẩm này chứ?')">Xóa</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center m-1" th:if="${totalItems > 0}">
+            <span>Trang: [[${currentPage}]] / [[${totalPage + 1}]]</span>
+        </div>
+
+        <div class="text-center m-1" th:unless="${totalItems > 0}">
+            <span>Không tìm thấy sản phẩm.</span>
+        </div>
+
+        <div th:if="${totalPage > 0}">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a class="page-link"
+                           th:href="@{'/products/page/1' + ${keyword != null ? '?keyword=' + keyword : ''} + ${min != null ? '&min=' + min : ''} + ${max != null ? '&max=' + max : ''}}">First</a>
+                    </li>
+                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a class="page-link"
+                           th:href="@{'/products/page/' + ${currentPage - 1} + ${keyword != null ? '?keyword=' + keyword : ''} + ${min != null ? '&min=' + min : ''} + ${max != null ? '&max=' + max : ''}}">Previous</a>
+                    </li>
+                    <li th:class="${currentPage != pageNumber ? 'page-item' : 'page-item active'}"
+                        th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                        <a class="page-link"
+                           th:href="@{'/products/page/' + ${pageNumber} + ${keyword != null ? '?keyword=' + keyword : ''} + ${min != null ? '&min=' + min : ''} + ${max != null ? '&max=' + max : ''}}"
+                           th:text="${pageNumber}"></a>
+                    </li>
+                    <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                        <a class="page-link"
+                           th:href="@{'/products/page/' + ${currentPage + 1} + ${keyword != null ? '?keyword=' + keyword : ''} + ${min != null ? '&min=' + min : ''} + ${max != null ? '&max=' + max : ''}}">Next</a>
+                    </li>
+                    <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                        <a class="page-link"
+                           th:href="@{'/products/page/' + ${totalPage + 1} + ${keyword != null ? '?keyword=' + keyword : ''} + ${min != null ? '&min=' + min : ''} + ${max != null ? '&max=' + max : ''}}">Last</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    function clearSearch() {
+        window.location = "[[@{/products}]]";
+    }
+
+</script>
+
+<script th:src="@{/js/common.js}"></script>
+
+</body>
+</html>

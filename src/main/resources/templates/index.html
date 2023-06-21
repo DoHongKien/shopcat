@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Cat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container mt-5">
+
+    <form th:action="@{/cat}" class="form-inline">
+        Search:
+        <input type="search" class="form-control" th:name="keyword" style="max-width: 200px;">
+        <button type="submit" class="btn btn-primary mt-3">Search</button>
+        <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+    </form>
+
+    <div class="row">
+        <div class="col-sm-3 border border-2" th:each="product : ${products}" style="height: 400px">
+
+            <div class="col-sm-12 mt-5 d-flex justify-content-center">
+                <a th:href="@{/sell/detail-product/{id}(id=${product.id})}">
+                    <img th:src="@{/images/image_cat_horizontal.jpg}" style="max-width: 600px; max-height: 200px;">
+                </a>
+            </div>
+
+            <div class="col-sm-12 text-center mt-2">
+                <a th:href="@{/sell/detail-product/{id}(id=${product.id})}" class="text-decoration-none">
+                    <h3 style="color: black;">[[${product.name}]]</h3>
+                </a>
+            </div>
+
+            <div class="col-sm-12 text-center mt-1">
+                <div th:if="${product.discountPrice == null}">
+                    [[${product.price}]]đ
+                </div>
+                <div th:if="${product.discountPrice != null}">
+                    <s>[[${product.price}]]đ</s>
+                    [[${product.discountPrice}]]đ
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="text-center m-1" th:if="${totalItems > 0}">
+    <span>Trang: [[${currentPage}]] / [[${totalPage + 1}]]</span>
+</div>
+
+<div class="text-center m-1" th:unless="${totalItems > 0}">
+    <span>Không tìm thấy sản phẩm.</span>
+</div>
+
+<div th:if="${totalPage > 0}">
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link"
+                   th:href="@{'/cat?pageNum=1' + ${keyword != null ? '&keyword=' + keyword : ''}}">First</a>
+            </li>
+            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link"
+                   th:href="@{'/cat?pageNum=' + ${currentPage - 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">Previous</a>
+            </li>
+            <li th:class="${currentPage != pageNumber ? 'page-item' : 'page-item active'}"
+                th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                <a class="page-link"
+                   th:href="@{'/cat?pageNum=' + ${pageNumber} + ${keyword != null ? '&keyword=' + keyword : ''}}"
+                   th:text="${pageNumber}"></a>
+            </li>
+            <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link"
+                   th:href="@{'/cat?pageNum=' + ${currentPage + 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">Next</a>
+            </li>
+            <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link"
+                   th:href="@{'/cat?pageNum=' + ${totalPage + 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</div>
+
+<script th:src="@{/js/common.js}"></script>
+
+</body>
+</html>
