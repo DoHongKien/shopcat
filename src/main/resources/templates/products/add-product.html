@@ -10,10 +10,6 @@
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!--    Select2 jquery-->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-
     <style>
         .errorMsg {
             color: #721c24;
@@ -29,54 +25,55 @@
 <div th:replace="~{fragments :: navbar}"></div>
 
 <div class="container" style="max-width: 1000px; margin: 20px auto;">
-    <form th:action="@{/products/add}" th:object="${product}" th:method="post">
+    <form th:action="@{/products/add}" th:object="${product}" method="post"
+          enctype="multipart/form-data">
 
+        <input type="hidden" th:field="*{id}">
         <div class="form-floating mb-3">
             <input type="text" class="form-control" th:field="*{name}">
             <label>Tên:</label>
-            <div th:if="${#fields.hasErrors('name')}" class="errorMsg" th:errors="*{name}"></div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Image: </label>
+            <div class="col-sm-8">
+                <input type="hidden" th:field="*{image}"/>
+                <input type="file" id="fileImage" name="imageProduct"
+                       accept="image/png, image/jpeg" class="mb-2"/>
+                <img id="thumbnail" alt="Photos preview" class="img-fluid" style="width: 100px; height: 150px;"
+                     th:src="@{${product.pathImage}}"/>
+            </div>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="soluong" value="1" th:field="*{quantity}">
+            <input type="number" class="form-control" th:field="*{quantity}">
             <label>Số lượng:</label>
-            <div th:if="${#fields.hasErrors('quantity')}" class="errorMsg" th:errors="*{quantity}"></div>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="giatien" value="1000" th:field="*{price}">
+            <input type="number" class="form-control" th:field="*{price}">
             <label>Giá tiền:</label>
-            <div th:if="${#fields.hasErrors('price')}" class="errorMsg" th:errors="*{price}"></div>
         </div>
 
         <div class="form-floating mb-3">
             <select class="form-select" th:field="*{origin}" id="country-select">
                 <option th:each="country : ${countries}" th:value="${country.name.common}"
                         th:text="${country.name.common}"></option>
-<!--                <option value="Vietnam">Vietnam</option>-->
-<!--                <option value="American">American</option>-->
-<!--                <option value="Korea">Korea</option>-->
+                <!--                <option value="Vietnam">Vietnam</option>-->
+                <!--                <option value="American">American</option>-->
+                <!--                <option value="Korea">Korea</option>-->
             </select>
             <label>Nguồn gốc:</label>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Thể loại:</label> <br>
-            <input type="radio" class="form-check-input" value="Mèo cảnh" th:field="*{category}">Mèo cảnh &nbsp;&nbsp;
-            <input type="radio" class="form-check-input" value="Mèo ta" th:field="*{category}">Mèo ta
-            <div th:if="${#fields.hasErrors('category')}" class="errorMsg" th:errors="*{category}"></div>
         </div>
 
         <div class="form-floating mb-3">
             <input type="number" class="form-control" id="tuoitho" value="1" th:field="*{lifespan}">
             <label>Tuổi thọ:</label>
-            <div th:if="${#fields.hasErrors('lifespan')}" class="errorMsg" th:errors="*{lifespan}"></div>
         </div>
 
         <div class="form-floating mb-3">
             <textarea class="form-control" th:field="*{description}" style="min-height: 80px"></textarea>
             <label>Mô tả:</label>
-            <div th:if="${#fields.hasErrors('description')}" class="errorMsg" th:errors="*{description}"></div>
         </div>
 
         <div class="mb-3">
@@ -90,38 +87,68 @@
 </div>
 
 <script type="text/javascript">
-    const sl = 1;
-    const gt = 1000;
-    const th = 1;
-    document.getElementById("soluong").value = sl;
-    document.getElementById("giatien").value = gt;
-    document.getElementById("tuoitho").value = th;
+    // const sl = 1;
+    // const gt = 1000;
+    // const th = 1;
+    // document.getElementById("soluong").value = sl;
+    // document.getElementById("giatien").value = gt;
+    // document.getElementById("tuoitho").value = th;
+    //
+    // const input_soluong = document.getElementById("soluong");
+    // const input_giatien = document.getElementById("giatien");
+    // const input_tuoitho = document.getElementById("tuoitho");
+    //
+    // input_soluong.addEventListener("blur", function () {
+    //     if (input_soluong.value.trim() === '') {
+    //         input_soluong.value = sl;
+    //     }
+    // });
+    //
+    // input_giatien.addEventListener("blur", function () {
+    //     if (input_giatien.value.trim() === '') {
+    //         input_giatien.value = gt;
+    //     }
+    // });
+    //
+    // input_tuoitho.addEventListener("blur", function () {
+    //     if (input_tuoitho.value.trim() === '') {
+    //         input_tuoitho.value = th;
+    //     }
+    // });
 
-    const input_soluong = document.getElementById("soluong");
-    const input_giatien = document.getElementById("giatien");
-    const input_tuoitho = document.getElementById("tuoitho");
-
-    input_soluong.addEventListener("blur", function () {
-        if (input_soluong.value.trim() === '') {
-            input_soluong.value = sl;
-        }
-    });
-
-    input_giatien.addEventListener("blur", function () {
-        if (input_giatien.value.trim() === '') {
-            input_giatien.value = gt;
-        }
-    });
-
-    input_tuoitho.addEventListener("blur", function () {
-        if (input_tuoitho.value.trim() === '') {
-            input_tuoitho.value = th;
-        }
-    });
-
+    //Check image
     $(document).ready(function () {
-        $('#country-select').select2();
+        $('#fileImage').change(function () {
+            if (!checkFileSize(this)) {
+                return;
+            }
+
+            showImageThumbnail(this);
+        });
     });
+
+    function showImageThumbnail(fileInput) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            $('#thumbnail').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(file);
+    }
+
+    function checkFileSize(fileInput) {
+        const fileSize = fileInput.files[0].size;
+
+        if (fileSize > 1024000) {
+            fileInput.setCustomValidity("You must choose an image less than " + 102400 + " !");
+            fileInput.reportValidity();
+            return false;
+        } else {
+            fileInput.setCustomValidity("");
+            return true;
+        }
+    }
 </script>
 
 <script th:src="@{/js/common.js}"></script>

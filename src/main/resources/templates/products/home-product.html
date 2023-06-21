@@ -29,7 +29,7 @@
 </div>
 
 <div class="container row mt-5">
-    <div class="col-4">
+    <div class="col-lg-4">
         <form th:action="@{/products/page/1}" class="form-inline">
             Search:
             <input type="search" name="keyword" class="form-control" th:value="${keyword}"
@@ -51,13 +51,14 @@
         </form>
     </div>
 
-    <div class="col-8">
+    <div class="col-lg-8">
         <a th:href="@{/products/viewadd}" class="btn btn-info">Add</a>
         <table class="table table-triped table-hover">
             <thead>
             <tr>
                 <th>Id</th>
                 <th>Tên</th>
+                <th>Ảnh</th>
                 <th>Số lượng</th>
                 <th>Giá tiền(VNĐ)</th>
                 <th>Nguồn gốc</th>
@@ -71,10 +72,14 @@
             <tr th:each="cat: ${listProduct}">
                 <td>[[${cat.id}]]</td>
                 <td>[[${cat.name}]]</td>
+                <td>
+                    <img th:if="${cat.image != null}" th:src="@{${cat.pathImage}}"
+                         style="width: 100px; height: 150px;">
+                </td>
                 <td>[[${cat.quantity}]]</td>
                 <td>[[${cat.price}]]</td>
                 <td>[[${cat.origin}]]</td>
-                <td>[[${cat.category}]]</td>
+                <td></td>
                 <td>[[${cat.status}]]</td>
                 <td>
                     <a th:href="@{/products/detail/{id}(id=${cat.id})}" class="btn btn-primary">Chi tiết</a>

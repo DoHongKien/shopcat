@@ -57,12 +57,12 @@
             <label>Nguồn gốc:</label>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Thể loại:</label> <br>
-            <input type="radio" class="form-check-input" value="Mèo cảnh" th:field="*{category}">Mèo cảnh
-            <input type="radio" class="form-check-input" value="Mèo ta" th:field="*{category}">Mèo ta
-            <div th:if="${#fields.hasErrors('category')}" class="errorMsg" th:errors="*{category}"></div>
-        </div>
+<!--        <div class="mb-3">-->
+<!--            <label class="form-label">Thể loại:</label> <br>-->
+<!--            <input type="radio" class="form-check-input" value="Mèo cảnh" th:field="*{category}">Mèo cảnh-->
+<!--            <input type="radio" class="form-check-input" value="Mèo ta" th:field="*{category}">Mèo ta-->
+<!--            <div th:if="${#fields.hasErrors('category')}" class="errorMsg" th:errors="*{category}"></div>-->
+<!--        </div>-->
 
         <div class="form-floating mb-3">
             <input type="number" class="form-control" id="tuoitho" value="1" th:field="*{lifespan}">

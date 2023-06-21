@@ -64,7 +64,6 @@ public class ProductRepositoryTest {
     public void saveProduct() {
         Product p = new Product();
         p.setName("1");
-        p.setCategory("1");
         p.setDescription("1");
         p.setPrice(BigDecimal.valueOf(100));
         p.setOrigin("1");

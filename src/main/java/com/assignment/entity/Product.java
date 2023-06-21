@@ -1,7 +1,6 @@
 package com.assignment.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,33 +21,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "Tên không được để trống.")
     @Column(name = "name")
     private String name;
 
-    @Min(value = 1, message = "Số lượng không được nhỏ hơn 1")
-    @Max(value = 100000, message = "Số lượng không được lớn hơn 100000")
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "quantity")
     private Integer quantity;
 
-    @DecimalMin(value = "1000", message = "Giá phải lớn hơn 1000")
     @Column(name = "price")
     private BigDecimal price;
 
-    @NotEmpty(message = "Nguồn gốc không được để trống")
     @Column(name = "origin")
     private String origin;
 
-    @NotEmpty(message = "Thể loại chưa được chọn")
-    @Column(name = "category")
-    private String category;
-
-    @Min(value = 1, message = "Tuổi thọ trung bình không được nhỏ hơn 1")
-    @Max(value = 100, message = "Tuổi thọ trung bình không được lớn hơn 100")
     @Column(name = "lifespan")
     private Integer lifespan;
 
-    @NotEmpty(message = "Mô tả không được để trống.")
     @Column(name = "description")
     private String description;
 
@@ -57,6 +47,9 @@ public class Product {
 
     @Column(name = "created_date")
     private Date createdDate;
+
+    @Column(name = "updated_date")
+    private Date updatedDate;
 
     @Column(name = "status")
     private Boolean status;
@@ -67,16 +60,22 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
 
-    public Product(Integer id, String name, Integer quantity, BigDecimal price, String origin, String category,
+    public Product(Integer id, String name, String image, Integer quantity, BigDecimal price, String origin,
                    Integer lifespan, String description, Boolean status) {
         this.id = id;
         this.name = name;
+        this.image = image;
         this.quantity = quantity;
         this.price = price;
         this.origin = origin;
-        this.category = category;
         this.lifespan = lifespan;
         this.description = description;
         this.status = status;
+    }
+
+    @Transient
+    public String getPathImage() {
+        if(id == null || image == null) return "/images/image-thumbnail.png";
+        return "/product-images/" + this.id + "/" + this.image;
     }
 }

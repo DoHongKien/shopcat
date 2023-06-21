@@ -1,5 +1,6 @@
 package com.assignment.product.controller;
 
+import com.assignment.FileUploadUtil;
 import com.assignment.dto.Country;
 import com.assignment.entity.Product;
 import com.assignment.product.service.CountryService;
@@ -10,13 +11,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/products")
@@ -112,7 +117,7 @@ public class ProductController {
         List<Country> countries = countryService.getAllCountry();
         model.addAttribute("countries", countries);
         model.addAttribute("product", product);
-        return "products/update-product";
+        return "products/add-product";
     }
 
     @GetMapping("/viewadd")
@@ -127,8 +132,10 @@ public class ProductController {
     @PostMapping("/add")
     public String addProduct(@Valid @ModelAttribute("product") Product product,
                              BindingResult result,
+                             @RequestParam("imageProduct") MultipartFile multipartFile,
                              RedirectAttributes redirectAttributes,
-                             Model model) {
+                             Model model) throws IOException {
+
 
         if (result.hasErrors()) {
             List<Country> countries = countryService.getAllCountry();
@@ -136,7 +143,18 @@ public class ProductController {
             return "products/add-product";
         }
 
-        productService.saveProduct(product);
+        if(!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            product.setImage(fileName);
+            Product saveProduct = productService.saveProduct(product);
+
+            String uploadDir = "product-images/" + saveProduct.getId();
+            FileUploadUtil.cleanDir(uploadDir);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        } else {
+            if(product.getImage().isEmpty()) product.setImage(null);
+            productService.saveProduct(product);
+        }
 
         redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được lưu thành công");
         return "redirect:/products";
