@@ -27,7 +27,7 @@ public class CountryService {
         Country[] countries = response.getBody();
         List<Country> listCountry = Arrays.asList(countries);
 
-        Collections.sort(listCountry, Comparator.comparing(country -> country.getName().getCommon()));
+        listCountry.sort(Comparator.comparing(country -> country.getName().getCommon()));
 
         return listCountry;
     }

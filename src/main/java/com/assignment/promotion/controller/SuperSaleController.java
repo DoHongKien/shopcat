@@ -74,26 +74,26 @@ public class SuperSaleController {
         return "redirect:/promotion/show";
     }
 
-    @GetMapping("/apply/{id}")
-    public String applyPromotion(@PathVariable("id") Integer id,
-                                 @RequestParam("productName") String productName,
-                                 RedirectAttributes redirectAttributes) {
-
-        Product productInDB = productService.findById(Integer.parseInt(productName));
-        Promotion promotionInDB = promotionService.findById(id);
-
-        BigDecimal afterApplyDiscount = productInDB.getPrice()
-                .multiply(BigDecimal.valueOf(promotionInDB.getDiscountPercentage()).divide(BigDecimal.valueOf(100)));
-
-        BigDecimal discountPrice = productInDB.getPrice().subtract(afterApplyDiscount);
-
-        promotionService.updateProductInPromotion(promotionInDB.getId(), productInDB.getId());
-        productService.updateDiscountPriceInProduct(productInDB.getId(), discountPrice);
-
-
-        redirectAttributes.addFlashAttribute("message", "Xóa khuyến mãi thành công");
-        return "redirect:/promotion/show";
-    }
+//    @GetMapping("/apply/{id}")
+//    public String applyPromotion(@PathVariable("id") Integer id,
+//                                 @RequestParam("productName") String productName,
+//                                 RedirectAttributes redirectAttributes) {
+//
+//        Product productInDB = productService.findById(Integer.parseInt(productName));
+//        Promotion promotionInDB = promotionService.findById(id);
+//
+//        BigDecimal afterApplyDiscount = productInDB.getPrice()
+//                .multiply(BigDecimal.valueOf(promotionInDB.getDiscountPercentage()).divide(BigDecimal.valueOf(100)));
+//
+//        BigDecimal discountPrice = productInDB.getPrice().subtract(afterApplyDiscount);
+//
+//        promotionService.updateProductInPromotion(promotionInDB.getId(), productInDB.getId());
+//        productService.updateDiscountPriceInProduct(productInDB.getId(), discountPrice);
+//
+//
+//        redirectAttributes.addFlashAttribute("message", "Xóa khuyến mãi thành công");
+//        return "redirect:/promotion/show";
+//    }
 
     @GetMapping("/sale/{id}")
     public String saleProduct(@PathVariable("id") Integer id, Model model) {
