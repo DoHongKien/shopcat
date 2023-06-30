@@ -3,8 +3,12 @@ package com.assignment.product.controller;
 import com.assignment.FileUploadUtil;
 import com.assignment.dto.Country;
 import com.assignment.entity.Product;
+import com.assignment.entity.ProductCategory;
+import com.assignment.entity.Review;
 import com.assignment.product.service.CountryService;
+import com.assignment.product.service.IProductCateService;
 import com.assignment.product.service.IProductService;
+import com.assignment.review.service.IReviewService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,11 +33,17 @@ public class ProductController {
 
     private IProductService productService;
 
+    private IProductCateService productCateService;
+
     private CountryService countryService;
 
     @Autowired
-    public ProductController(IProductService productService, CountryService countryService) {
+    public ProductController(IProductService productService,
+                             IProductCateService productCateService,
+                             CountryService countryService) {
         this.productService = productService;
+        this.productCateService = productCateService;
+
         this.countryService = countryService;
     }
 
@@ -110,21 +120,58 @@ public class ProductController {
         return "products/home-product";
     }
 
+    @GetMapping("/filter/categories/{category}")
+    public String filterCategories(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                   @PathVariable(value = "category", required = false) String category,
+                                   Model model) {
+
+        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+
+        Page<Product> products = productService.findByCategoryName(pageNum, category);
+
+        int totalPage = products.getTotalPages();
+        int currentPage = products.getNumber();
+        long totalItems = products.getTotalElements();
+
+        int startPage = Math.max(1, currentPage - 1);
+        int endPage = Math.min(startPage + 2, totalPage);
+
+        if (startPage + 1 == totalPage && startPage > 1) {
+            startPage -= 1;
+        }
+
+        model.addAttribute("productCategories", productCategories);
+        model.addAttribute("productLists", products.getContent());
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("totalPage", totalPage - 1);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("category", category);
+        return "home-shop";
+    }
+
     @GetMapping("/detail/{id}")
     public String detailProduct(@PathVariable int id, Model model) {
 
         Product product = productService.findById(id);
         List<Country> countries = countryService.getAllCountry();
+        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+
         model.addAttribute("countries", countries);
+        model.addAttribute("productCategories", productCategories);
         model.addAttribute("product", product);
-        return "products/add-product";
+        return "products/update-product";
     }
 
     @GetMapping("/viewadd")
     public String viewAdd(Model model) {
 
         List<Country> countries = countryService.getAllCountry();
+        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+
         model.addAttribute("countries", countries);
+        model.addAttribute("productCategories", productCategories);
         model.addAttribute("product", new Product());
         return "products/add-product";
     }

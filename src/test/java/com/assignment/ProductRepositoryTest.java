@@ -3,10 +3,16 @@ package com.assignment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.assignment.entity.Product;
+import com.assignment.entity.ProductCategory;
 import com.assignment.product.repository.IProductRepository;
+import com.assignment.product.repository.ProductCateRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,18 @@ public class ProductRepositoryTest {
     public void findAll() {
         List<Product> listProduct = productRepository.findAll();
         listProduct.forEach(p -> System.out.println(p));
+    }
+
+    @Test
+    public void findByCategoryName() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Product> products = productRepository.findByCategoryName("Mèo Ai Cập", pageable);
+
+        for(Product p: products.getContent()) {
+            System.out.println(p.getId() + " " + p.getName() + " " + p.getImage() + " " + p.getQuantity() + " " + p.getPrice() + " " + p.getDiscountPrice());
+        }
+
+        assertThat(products).isNotNull();
     }
 
     @Test

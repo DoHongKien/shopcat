@@ -14,7 +14,7 @@ import java.util.List;
 public interface CartDetailRepository extends JpaRepository<CartDetail, Integer> {
 
     @Query("""
-            SELECT new com.assignment.dto.ProductInCart(cd.product.id, cd.product.name, cd.quantity, cd.price) 
+            SELECT new com.assignment.dto.ProductInCart(cd.product.id, cd.product.name, cd.quantity, cd.price, p) 
             FROM CartDetail cd JOIN Cart c ON cd.cart.id = c.id JOIN Product p ON cd.product.id = p.id WHERE c.user.id = :userId
             """)
     List<ProductInCart> findAllCartDetailByUser(@Param("userId") Integer userId);

@@ -34,6 +34,11 @@ public class InvoiceDetailService implements IInvoiceDetailService{
     }
 
     @Override
+    public int countBuyProduct(Integer userId, Integer productId) {
+        return invoiceDetailRepository.countBuyProduct(userId, productId);
+    }
+
+    @Override
     public InvoiceDetail saveInvoiceDetail(InvoiceDetail invoiceDetail) {
         return invoiceDetailRepository.save(invoiceDetail);
     }

@@ -76,7 +76,19 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-<!--        Dependency cache and caffeine-->
+        <!--        Dependency chart-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>chartjs</artifactId>
+            <version>2.9.4</version>
+        </dependency>
+
+        <!--        Dependency cache and caffeine-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>

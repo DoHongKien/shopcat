@@ -13,6 +13,8 @@ public interface IInvoiceDetailService {
 
     InvoiceDetail findByIdInvoiceDetail(Integer id);
 
+    int countBuyProduct(Integer userId, Integer productId);
+
     InvoiceDetail saveInvoiceDetail(InvoiceDetail invoiceDetail);
 
     void deleteInvoiceDetail(Integer id);

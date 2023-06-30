@@ -4,49 +4,196 @@
 <head>
     <meta charset="UTF-8">
     <title>Shop Cat</title>
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/custom.css}">
+
+    <style>
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            min-width: 332px; /* Đặt kích thước tối thiểu của menu */
+            width: auto !important; /* Tự động điều chỉnh kích thước */
+            max-width: 100%; /* Đặt kích thước tối đa của menu */
+        }
+
+        .dropdown-item {
+            height: 40px;
+        }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="container mt-5">
+<div class="container-fluid pt-5">
 
-    <form th:action="@{/cat}" class="form-inline">
-        Search:
-        <input type="search" class="form-control" th:name="keyword" style="max-width: 200px;">
-        <button type="submit" class="btn btn-primary mt-3">Search</button>
-        <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
-    </form>
+    <div class="row border-top px-xl-5 mb-5">
+        <div class="dropdown col-lg-3 d-none d-lg-block">
+            <button class="btn shadow-none d-flex align-items-center justify-content-between background-orange-bold rounded-0 text-white w-100 dropdown-toggle"
+                    type="button" id="categories" data-bs-toggle="dropdown" aria-expanded="false"
+                    style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                <h6 class="m-0 text-uppercase">Thể loại mèo</h6>
+            </button>
+            <ul class="dropdown-menu rounded-0" aria-labelledby="categories">
+                <th:block th:each="cat : ${productCategories}">
+                    <li>
+                        <a class="dropdown-item"
+                           th:href="@{/products/filter/categories/{category}(category=${cat.name})}">[[${cat.name}]]</a>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
 
-    <div class="row">
-        <div class="col-sm-3 border border-2" th:each="product : ${products}" style="height: 400px">
-
-            <div class="col-sm-12 mt-5 d-flex justify-content-center">
-                <a th:href="@{/sell/detail-product/{id}(id=${product.id})}">
-                    <img th:src="@{${product.pathImage}}" style="max-width: 600px; max-height: 200px;">
+        <div class="col-lg-9">
+            <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="height: 410px;">
+                        <img class="img-fluid" src="img/carousel-1.jpg" alt="Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First
+                                    Order</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
+                                <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="height: 410px;">
+                        <img class="img-fluid" src="img/carousel-2.jpg" alt="Image">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First
+                                    Order</h4>
+                                <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
+                                <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                    <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                        <span class="carousel-control-prev-icon mb-n2"></span>
+                    </div>
+                </a>
+                <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                    <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                        <span class="carousel-control-next-icon mb-n2"></span>
+                    </div>
                 </a>
             </div>
+        </div>
+    </div>
 
-            <div class="col-sm-12 text-center mt-2">
-                <a th:href="@{/sell/detail-product/{id}(id=${product.id})}" class="text-decoration-none">
-                    <h3 style="color: black;">[[${product.name}]]</h3>
+    <div class="row px-xl-5 pb-3">
+        <form th:action="@{/cat}" class="mb-3">
+            <div class="input-group">
+                <input type="search" class="form-control border-blue-light" th:name="keyword"
+                       placeholder="Tìm kiếm sản phẩm"
+                       style="max-width: 500px;">
+                <button type="submit" class="btn border-blue-light">
+                    <i class="fa fa-search color-orange-bold"></i>
+                </button>
+                <button type="button" class="btn border-blue-light" onclick="clearSearch()">
+                    <i class="fa fa-eraser color-orange-bold"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-4 col-md-6 pb-1" th:each="product : ${products}">
+            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
+                <p class="text-right">[[${product.quantity}]] Products</p>
+                <a th:href="@{/sell/detail-product/{id}(id=${product.id})}"
+                   class="cat-img position-relative overflow-hidden mb-3">
+                    <img class="img-fluid" th:src="@{${product.pathImage}}" alt="">
                 </a>
+                <h5 class="font-weight-semi-bold text-center m-0">[[${product.name}]]</h5>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-sm-12 text-center mt-1">
-                <div th:if="${product.discountPrice == null}">
-                    [[${product.price}]]đ
+<!-- Offer Start -->
+<div class="container-fluid offer pt-5">
+    <div class="row px-xl-5">
+        <div class="col-md-6 pb-4">
+            <div class="position-relative background-blue-light text-center text-md-right text-white mb-2 py-5 px-5">
+                <img th:src="@{images/Maine-coon.png}" alt="">
+                <div class="position-relative" style="z-index: 1;">
+                    <h5 class="text-uppercase color-orange-bold mb-3">20% off the all order</h5>
+                    <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
+                    <a href="" class="btn border-orange-bold color-orange-bold py-md-2 px-md-3">Shop Now</a>
                 </div>
-                <div th:if="${product.discountPrice != null}">
-                    <del>[[${product.price}]]đ</del>
-                    [[${product.discountPrice}]]đ
-                </div>
-
             </div>
+        </div>
+        <div class="col-md-6 pb-4">
+            <div class="position-relative background-blue-light text-center text-md-left text-white mb-2 py-5 px-5">
+                <img th:src="@{images/meo-scottish-fold.png}" alt="">
+                <div class="position-relative" style="z-index: 1;">
+                    <h5 class="text-uppercase color-orange-bold mb-3">20% off the all order</h5>
+                    <h1 class="mb-4 font-weight-semi-bold">Winter Collection</h1>
+                    <a href="" class="btn border-orange-bold color-orange-bold py-md-2 px-md-3">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Offer End -->
 
+<!-- Products Start -->
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">Trandy Products</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1" th:each="product : ${products}">
+            <div class="card product-item border-0 mb-4">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                    <img class="img-fluid w-100" th:src="@{${product.pathImage}}" alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3">[[${product.name}]]</h6>
+                    <div class="d-flex justify-content-center">
+                        <th:block th:if="${product.discountPrice == null}">
+                            <h6><span id="number1">[[${product.price}]]</span>₫</h6>
+                        </th:block>
+                        <th:block th:if="${product.discountPrice != null}">
+                            <h6><span id="number2">[[${product.discountPrice}]]</span>₫</h6>
+                            <h6 class="text-muted ml-2">
+                                <del><span id="number3">[[${product.price}]]</span>₫</del>
+                            </h6>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                    <a th:href="@{/sell/detail-product/{id}(id=${product.id})}"
+                       class="btn btn-sm text-dark p-0">
+                        <i class="fas fa-eye color-orange-bold mr-1"></i>
+                        View Detail
+                    </a>
+                    <a href="" class="btn btn-sm text-dark p-0">
+                        <i class="fas fa-shopping-cart color-orange-bold mr-1"></i>
+                        Add To Cart
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -88,6 +235,10 @@
     </nav>
 </div>
 </div>
+
+<script>
+    moduleURL = "[[@{/cat}]]";
+</script>
 
 <script th:src="@{/js/common.js}"></script>
 

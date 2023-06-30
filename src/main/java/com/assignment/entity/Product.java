@@ -36,6 +36,10 @@ public class Product {
     @Column(name = "origin")
     private String origin;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private ProductCategory category;
+
     @Column(name = "lifespan")
     private Integer lifespan;
 

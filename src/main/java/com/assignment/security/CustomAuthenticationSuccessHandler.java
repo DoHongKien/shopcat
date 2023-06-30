@@ -1,6 +1,5 @@
 package com.assignment.security;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -12,7 +11,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     // Hàm chỉ định form sẽ xuất hiện sau khi login thành công
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
 
         response.sendRedirect("/cat");
     }

@@ -15,7 +15,9 @@ import java.util.List;
 @Service
 public class ProductService implements IProductService {
 
-    private static final int PRODUCT_PER_PAGE = 4;
+    private static final int PRODUCT_PER_PAGE = 3;
+
+    private static final int SEARCH_CATEGORY_PER_PAGE = 9;
 
     private IProductRepository productRepository;
 
@@ -64,6 +66,14 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findProductInStock() {
         return productRepository.findProductInStock();
+    }
+
+    @Override
+    public Page<Product> findByCategoryName(int pageNum, String keyword) {
+
+        Pageable pageable = PageRequest.of(pageNum - 1, SEARCH_CATEGORY_PER_PAGE);
+
+        return productRepository.findByCategoryName(keyword, pageable);
     }
 
     @Override

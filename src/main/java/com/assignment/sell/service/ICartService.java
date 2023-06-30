@@ -11,6 +11,8 @@ public interface ICartService {
 
     Cart findByIdCart(Integer id);
 
+    int countCartDetailByUser(Integer userId);
+
     int findCartByUser(Integer id);
 
     Cart saveCart(Cart cart);

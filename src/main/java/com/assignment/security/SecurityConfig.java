@@ -37,11 +37,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/logout", "/register/**", "/forgot-password/**").permitAll()
+                .requestMatchers("/logout", "/register/**", "/forgot-password/**", "/sell/**").permitAll()
                 .requestMatchers(
                         "/add-to-cart/delete-product/**",
-                        "/add-to-cart/view-cart").hasAnyAuthority("GUEST", "USER", "ADMIN")
-                .requestMatchers("/add-to-cart/buy-now").hasAnyAuthority("USER", "ADMIN")
+                        "/add-to-cart/view-cart", "/add-to-cart/buy-now").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/products/**", "/statistics/**", "/promotion/**", "/show-invoice").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
@@ -60,6 +59,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                .requestMatchers("/images/**", "/js/**");
+                .requestMatchers("/images/**", "/js/**", "/img/**");
     }
 }

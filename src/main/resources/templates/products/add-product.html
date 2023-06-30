@@ -28,7 +28,7 @@
     <form th:action="@{/products/add}" th:object="${product}" method="post"
           enctype="multipart/form-data">
 
-        <input type="hidden" th:field="*{id}">
+<!--        <input type="hidden" th:field="*{id}">-->
         <div class="form-floating mb-3">
             <input type="text" class="form-control" th:field="*{name}">
             <label>Tên:</label>
@@ -64,6 +64,15 @@
                 <!--                <option value="Korea">Korea</option>-->
             </select>
             <label>Nguồn gốc:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select class="form-select" th:field="*{category}">
+                <option th:each="cat : ${productCategories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}"></option>
+            </select>
+            <label>Thể loại:</label>
         </div>
 
         <div class="form-floating mb-3">

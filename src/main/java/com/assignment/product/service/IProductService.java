@@ -20,6 +20,8 @@ public interface IProductService {
 
     List<Product> findProductInStock();
 
+    Page<Product> findByCategoryName(int pageNum, String keyword);
+
     Product findById(int id);
 
     Product saveProduct(Product product);

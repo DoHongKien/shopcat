@@ -51,10 +51,31 @@ public class StatisticController {
         List<InvoiceStatisticDto> productTopSellingMonth = invoiceDetailService.findProductTopSellingMonth(month);
         List<InvoiceStatisticDto> productTopSellingWeek = invoiceDetailService.findProductTopSellingWeek(week);
 
+        List<String> productNameMonth = new ArrayList<>();
+        List<Long> productQtyMonth = new ArrayList<>();
+        for(InvoiceStatisticDto in: productTopSellingMonth) {
+            productNameMonth.add(in.getProductName());
+            productQtyMonth.add(in.getQuantity());
+        }
+
+        List<String> productNameWeek = new ArrayList<>();
+        List<Long> productQtyWeek = new ArrayList<>();
+        for(InvoiceStatisticDto in: productTopSellingWeek) {
+            productNameWeek.add(in.getProductName());
+            productQtyWeek.add(in.getQuantity());
+        }
+
+        model.addAttribute("weekLabels", productNameWeek);
+        model.addAttribute("weekValues", productQtyWeek);
+        model.addAttribute("monthLabels", productNameMonth);
+        model.addAttribute("monthValues", productQtyMonth);
+
         model.addAttribute("productListInventory", productListInventory);
         model.addAttribute("productTopSellingWeek", productTopSellingWeek);
         model.addAttribute("productTopSellingMonth", productTopSellingMonth);
         model.addAttribute("months", months);
+        model.addAttribute("month", month);
+        model.addAttribute("week", week);
         return "statistics/home-statistic";
     }
 }

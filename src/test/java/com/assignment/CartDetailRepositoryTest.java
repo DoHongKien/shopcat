@@ -61,4 +61,11 @@ public class CartDetailRepositoryTest {
         System.out.println("Cart id: " + cartByUser);
         assertThat(cartByUser).isGreaterThan(0);
     }
+
+    @Test
+    public void countCartDetailByUser() {
+
+        int cartDetailByUser = cartRepository.countCartDetailByUser(2);
+        assertThat(cartDetailByUser).isEqualTo(0);
+    }
 }

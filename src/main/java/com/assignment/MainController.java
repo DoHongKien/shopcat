@@ -1,8 +1,15 @@
 package com.assignment;
 
 import com.assignment.entity.Product;
+import com.assignment.entity.ProductCategory;
+import com.assignment.entity.Review;
+import com.assignment.product.service.IProductCateService;
 import com.assignment.product.service.IProductService;
+import com.assignment.review.dto.ReviewRequest;
+import com.assignment.review.service.IReviewService;
 import com.assignment.security.UserDetail;
+import com.assignment.sell.service.ICartService;
+import com.assignment.sell.service.IInvoiceDetailService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,13 +29,37 @@ public class MainController {
 
     private IProductService productService;
 
+    private IProductCateService productCateService;
+
+    private IReviewService reviewService;
+
+    private ICartService cartService;
+
+    private IInvoiceDetailService invoiceDetailService;
+
     @Autowired
-    public MainController(IProductService productService) {
+    public MainController(IProductService productService,
+                          IProductCateService productCateService,
+                          IReviewService reviewService,
+                          ICartService cartService,
+                          IInvoiceDetailService invoiceDetailService) {
         this.productService = productService;
+        this.productCateService = productCateService;
+        this.reviewService = reviewService;
+        this.cartService = cartService;
+        this.invoiceDetailService = invoiceDetailService;
+    }
+
+    @GetMapping("/home")
+    public String viewHome() {
+        return "home";
     }
 
     @GetMapping("/login")
     public String viewLoginPage() {
+//        int countProductInCart = cartService.countCartDetailByUser(UserDetail.getId());
+//
+//        session.setAttribute("countProductInCart", countProductInCart);
         return "login";
     }
 
@@ -36,6 +67,8 @@ public class MainController {
     public String viewHomePage(@RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "pageNum", defaultValue = "1", required = false) Integer pageNum,
                                Model model) {
+
+        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
 
         Page<Product> productPage = productService.findByPage(pageNum, keyword);
         List<Product> products = productPage.getContent();
@@ -50,6 +83,8 @@ public class MainController {
         if (startPage + 1 == totalPage && startPage > 1) {
             startPage -= 1;
         }
+
+        model.addAttribute("productCategories", productCategories);
 
         model.addAttribute("products",products);
         model.addAttribute("userId","User Id: " + UserDetail.getId());
@@ -66,8 +101,18 @@ public class MainController {
     @GetMapping("/sell/detail-product/{id}")
     public String viewDetailProduct(@PathVariable("id") Integer id, Model model) {
 
+        int countBuyProduct = invoiceDetailService.countBuyProduct(UserDetail.getId(), id);
+        int countReviewProduct = reviewService.countReviewProduct(UserDetail.getId(), id);
+
+        List<Review> reviews = reviewService.findReviewByProduct(id);
         Product product = productService.findById(id);
         model.addAttribute("product", product);
+        model.addAttribute("reviewRequest", new ReviewRequest());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("productId", id);
+        model.addAttribute("userId", UserDetail.getId());
+        model.addAttribute("countBuyProduct", countBuyProduct);
+        model.addAttribute("countReviewProduct", countReviewProduct);
         return "sell/product-detail";
     }
 

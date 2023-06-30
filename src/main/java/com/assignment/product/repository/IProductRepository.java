@@ -30,6 +30,9 @@ public interface IProductRepository extends JpaRepository<Product, Integer> {
             """)
     List<Product> findProductInStock();
 
+    @Query("SELECT p FROM Product p JOIN FETCH ProductCategory pc ON p.category.id = pc.id WHERE pc.name LIKE %?1%")
+    Page<Product> findByCategoryName(String category, Pageable pageable);
+
     @Transactional
     @Modifying
     @Query("UPDATE Product p SET p.quantity = :quantity WHERE p.id = :id")

@@ -1,5 +1,6 @@
 package com.assignment.dto;
 
+import com.assignment.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,9 @@ import java.math.BigDecimal;
 @Data
 public class ProductInCart implements Serializable {
 
-    private Integer id;
+    private Integer productId;
     private String productName;
     private Integer quantity;
     private BigDecimal price;
+    private Product productIC;
 }

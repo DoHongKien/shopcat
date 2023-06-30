@@ -4,6 +4,8 @@ import com.assignment.dto.ProductInCart;
 import com.assignment.dto.ProductInfo;
 import com.assignment.entity.*;
 import com.assignment.product.service.IProductService;
+import com.assignment.review.dto.ReviewRequest;
+import com.assignment.review.service.IReviewService;
 import com.assignment.security.UserDetail;
 import com.assignment.sell.service.ICartDetailService;
 import com.assignment.sell.service.ICartService;
@@ -40,19 +42,23 @@ public class AddToCartController {
 
     private IInvoiceDetailService invoiceDetailService;
 
+    private IReviewService reviewService;
+
     @Autowired
     public AddToCartController(ICartService cartService,
                                ICartDetailService cartDetailService,
                                IProductService productService,
                                UserService userService,
                                IInvoiceService invoiceService,
-                               IInvoiceDetailService invoiceDetailService) {
+                               IInvoiceDetailService invoiceDetailService,
+                               IReviewService reviewService) {
         this.cartService = cartService;
         this.cartDetailService = cartDetailService;
         this.productService = productService;
         this.userService = userService;
         this.invoiceService = invoiceService;
         this.invoiceDetailService = invoiceDetailService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/add-to-cart/view-cart")
@@ -74,34 +80,22 @@ public class AddToCartController {
     public String addProductToCart(@ModelAttribute("productInfo") ProductInfo productInfo,
                                    Model model) {
 
+        int countBuyProduct = invoiceDetailService.countBuyProduct(UserDetail.getId(), productInfo.getId());
+        int countReviewProduct = reviewService.countReviewProduct(UserDetail.getId(), productInfo.getId());
+
+        List<Review> reviews = reviewService.findReviewByProduct(productInfo.getId());
+
         Product product = productService.findById(productInfo.getId());
-
-        BigDecimal productPrice;
-
-        if(product.getDiscountPrice() == null) {
-            productPrice = product.getPrice().multiply(BigDecimal.valueOf(productInfo.getQty()));
-        } else {
-            productPrice = product.getDiscountPrice().multiply(BigDecimal.valueOf(productInfo.getQty()));
-        }
-
-        ProductInfo pInfo = ProductInfo
-                .builder()
-                .id(productInfo.getId())
-                .name(productInfo.getName())
-                .qty(productInfo.getQty())
-                .totalAmount(productPrice)
-                .build();
 
         CartDetail productInCart = cartDetailService.findByProductInCart(productInfo.getId(), cartService.findCartByUser(UserDetail.getId()));
 
         if (productInCart != null) {
 
             int productId = productInfo.getId();
-            int cartDetailId = cartService.findCartByUser(UserDetail.getId());
-            int quantity = pInfo.getQty() + productInCart.getQuantity();
-            BigDecimal price = pInfo.getTotalAmount().add(productInCart.getPrice());
-            cartDetailService.updateQuantityAndPriceInCart(productId, cartDetailId, quantity, price);
-
+            int cartDetail = cartService.findCartByUser(UserDetail.getId());
+            int quantity = productInfo.getQty() + productInCart.getQuantity();
+            BigDecimal price = productInCart.getPrice();
+            cartDetailService.updateQuantityAndPriceInCart(productId, cartDetail, quantity, price);
         } else {
 
             Cart cart = new Cart();
@@ -110,15 +104,40 @@ public class AddToCartController {
             CartDetail cartDetail = new CartDetail();
             cartDetail.setProduct(product);
             cartDetail.setCart(cart);
-            cartDetail.setQuantity(pInfo.getQty());
-            cartDetail.setPrice(pInfo.getTotalAmount());
+            cartDetail.setQuantity(productInfo.getQty());
+            cartDetail.setPrice(productInfo.getPrice());
             cartDetail.setStatus(true);
 
             cartDetailService.saveCartDetail(cartDetail);
         }
 
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("reviewRequest", new ReviewRequest());
         model.addAttribute("product", product);
+        model.addAttribute("countBuyProduct", countBuyProduct);
+        model.addAttribute("countReviewProduct", countReviewProduct);
+        model.addAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng!");
         return "sell/product-detail";
+    }
+
+    @GetMapping("/add-to-cart/asc-quantity/{id}")
+    public String updateQuantityAscInCart(@PathVariable(value = "id") Integer productId) {
+
+        CartDetail productInCart = cartDetailService.findByProductInCart(productId, cartService.findCartByUser(UserDetail.getId()));
+        int cartDetail = cartService.findCartByUser(UserDetail.getId());
+        cartDetailService.updateQuantityAndPriceInCart(productId, cartDetail, productInCart.getQuantity() + 1, productInCart.getPrice());
+
+        return "redirect:/add-to-cart/view-cart";
+    }
+
+    @GetMapping("/add-to-cart/desc-quantity/{id}")
+    public String updateQuantityDescInCart(@PathVariable(value = "id") Integer productId) {
+
+        CartDetail productInCart = cartDetailService.findByProductInCart(productId, cartService.findCartByUser(UserDetail.getId()));
+        int cartDetail = cartService.findCartByUser(UserDetail.getId());
+        cartDetailService.updateQuantityAndPriceInCart(productId, cartDetail, productInCart.getQuantity() - 1, productInCart.getPrice());
+
+        return "redirect:/add-to-cart/view-cart";
     }
 
     @PostMapping("/add-to-cart/buy-now")
@@ -130,23 +149,25 @@ public class AddToCartController {
 
         List<ProductInCart> listCartDetail = cartDetailService.findAllCartDetailByUser(UserDetail.getId());
 
-        if(selectProducts == null) {
+        if (selectProducts == null) {
             redirectAttributes.addFlashAttribute("anotherChooseProduct", "Bạn chưa chọn sản phẩm để thanh toán");
             return "redirect:/add-to-cart/view-cart";
         }
 
         for (Integer selectProduct : selectProducts) {
             for (ProductInCart productInCart : listCartDetail) {
-                if (selectProduct.intValue() == productInCart.getId()) {
+                if (selectProduct.intValue() == productInCart.getProductId()) {
                     productInCarts.add(productInCart);
                     break;
                 }
             }
         }
 
+        BigDecimal totalAmount = BigDecimal.ZERO;
         for (ProductInCart productInCart : productInCarts) {
+            totalAmount = totalAmount.add(productInCart.getPrice().multiply(BigDecimal.valueOf(productInCart.getQuantity())));
             for (Product product : products) {
-                if (productInCart.getQuantity() > product.getQuantity() && productInCart.getId() == product.getId()) {
+                if (productInCart.getQuantity() > product.getQuantity() && productInCart.getProductId() == product.getId()) {
                     redirectAttributes.addFlashAttribute("quantityGreater", "Mặt hàng " + product.getName() + " còn " + product.getQuantity() + " không đủ đáp ứng nhu cầu quý khách");
                     return "redirect:/add-to-cart/view-cart";
                 }
@@ -156,6 +177,7 @@ public class AddToCartController {
 
         session.setAttribute("productCartPayment", productInCarts);
         model.addAttribute("productInCarts", productInCarts);
+        model.addAttribute("totalAmount", totalAmount);
         return "sell/payment-cart";
     }
 
@@ -177,19 +199,19 @@ public class AddToCartController {
 
         Product product = new Product();
         for (ProductInCart pic : productInCarts) {
-            product.setId(pic.getId());
+            product.setId(pic.getProductId());
             InvoiceDetail invoiceDetail = new InvoiceDetail(product, pic.getQuantity(),
                     pic.getPrice().multiply(BigDecimal.valueOf(pic.getQuantity())), true);
             invoice.addInvoiceDetail(invoiceDetail);
             invoiceDetailService.saveInvoiceDetail(invoiceDetail);
 
             // Update quantity product
-            Product pDb = productService.findById(pic.getId());
+            Product pDb = productService.findById(pic.getProductId());
             productService.updateQtyProduct(pDb.getId(), pDb.getQuantity() - pic.getQuantity());
 
             // Delete product after payment
             int cartId = cartService.findCartByUser(UserDetail.getId());
-            cartDetailService.deleteByProductIdAndCartId(pic.getId(), cartId);
+            cartDetailService.deleteByProductIdAndCartId(pic.getProductId(), cartId);
         }
 
         session.removeAttribute("productCartPayment");

@@ -34,6 +34,11 @@ public class CartService implements ICartService{
     }
 
     @Override
+    public int countCartDetailByUser(Integer userId) {
+        return cartRepository.countCartDetailByUser(userId);
+    }
+
+    @Override
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
     }

@@ -39,4 +39,14 @@ public interface InvoiceDetailRepository extends JpaRepository<InvoiceDetail, In
             ORDER BY SUM(id.quantity) DESC
             """)
     List<InvoiceStatisticDto> findTopSelling(@Param("month") Integer month, @Param("year") Integer year);
+
+    @Query("""
+            SELECT count(idl.id) 
+            FROM InvoiceDetail idl 
+            JOIN Invoice i ON idl.invoice.id = i.id 
+            JOIN Product p ON idl.product.id = p.id
+            WHERE i.user.id = ?1 AND p.id = ?2                                       
+            """)
+    int countBuyProduct(Integer userId, Integer productId);
 }
+
