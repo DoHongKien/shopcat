@@ -25,7 +25,7 @@
                 <ul class="navbar-nav">
                     <th:block sec:authorize="hasAuthority('ADMIN')">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" th:href="@{/products}">Product</a>
+                            <a class="nav-link" th:href="@{/products}">Product</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/product-cate}">Product
@@ -64,6 +64,54 @@
             </div>
         </div>
     </nav>
+
+</div>
+
+<div th:fragment="footer">
+
+    <div class="container-fluid mt-5 p-2 bg-light">
+
+        <div class="row px-xl-5 pt-1">
+            <div class="col-lg-4 col-md-12 mb-1 pr-3 pr-xl-5">
+                <a th:href="@{/cat}" class="text-decoration-none">
+                    <h1 class="mb-4 display-5 font-weight-bold">CozyCats</h1>
+                </a>
+                <p class="text-dark ">1 quả shop bán rất nhiều mèo cute, đáng yêu.</p>
+                <p class="text-dark mb-2"><i class="fa fa-map-marker-alt color-orange-bold mr-3"></i>Long Hưng, Văn Giang, Hưng Yên</p>
+                <p class="text-dark mb-2"><i class="fa fa-envelope color-orange-bold mr-3"></i>dohongkien2003@gmail.com</p>
+                <p class="text-dark mb-0"><i class="fa fa-phone-alt color-orange-bold mr-3"></i>+84969951201</p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-6 mb-1">
+                        <h5 class="font-weight-bold text-dark mb-4">Bản đồ</h5>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d377.78298228589136!2d105.95026462998182!3d20.94369194411838!3m2!1i1024!2i768!4f13.1!5e0!3m2!1svi!2s!4v1688479566123!5m2!1svi!2s"
+                                width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div class="col-md-3 mb-1">
+                        <h5 class="font-weight-bold text-dark mb-4">Tóm tắt</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{/cat}"><i class="fas fa-home-alt mr-2"></i>Trang chủ</a>
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{profile}"><i class="far fa-user mr-2"></i>Hồ sơ</a>
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{add-to-cart/view-cart}"><i class="fas fa-shopping-cart mr-2"></i>Giỏ hàng</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-1">
+                        <h5 class="font-weight-bold text-dark mb-4">Liên hệ</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-facebook mr-2"></i>Facebook</a>
+                            <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-instagram mr-2"></i>Instagram</a>
+                            <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-youtube mr-2"></i>Youtube</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </div>
 

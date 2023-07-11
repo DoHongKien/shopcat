@@ -1,5 +1,6 @@
 package com.assignment.product.service;
 
+import com.assignment.dto.ProductContainsPromotion;
 import com.assignment.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +23,15 @@ public interface IProductService {
 
     Page<Product> findByCategoryName(int pageNum, String keyword);
 
+    List<ProductContainsPromotion> findAllProductContainsPromotion();
+
     Product findById(int id);
 
     Product saveProduct(Product product);
 
     void deleteProduct(int id);
 
-    void updateQtyProduct(int id, int qty);
+    void updateQtyProduct(int id, int qty, int sold);
 
-    void updateDiscountPriceInProduct(Integer id, BigDecimal discountPrice);
+    void updateDiscountPriceInProduct(Integer id, Integer promotionId, BigDecimal discountPrice);
 }

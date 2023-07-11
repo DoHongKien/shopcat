@@ -2,23 +2,18 @@ package com.assignment.sell.controller;
 
 import com.assignment.dto.InvoiceStatisticDto;
 import com.assignment.entity.Product;
-import com.assignment.entity.Promotion;
 import com.assignment.product.service.IProductService;
 import com.assignment.promotion.service.IPromotionService;
 import com.assignment.sell.service.IInvoiceDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,15 +23,12 @@ public class StatisticController {
 
     private IInvoiceDetailService invoiceDetailService;
 
-    private IPromotionService promotionService;
-
     @Autowired
     public StatisticController(IProductService productService,
                                IInvoiceDetailService invoiceDetailService,
                                IPromotionService promotionService) {
         this.productService = productService;
         this.invoiceDetailService = invoiceDetailService;
-        this.promotionService = promotionService;
     }
 
     @GetMapping("/statistics")

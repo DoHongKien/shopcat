@@ -3,8 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Invoice</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!--SweetAlert2 show notice -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/custom.css}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -12,26 +30,41 @@
 <div th:replace="~{fragments :: navbar}"></div>
 
 <div class="container mt-3">
-    <table class="table table-triped table-hover">
+    <label class="form-inline">
+        Show
+        <select id="data_product_length" aria-controls="data_product"
+                class="custom-select custom-select-sm form-control form-control-sm ml-1 mr-1" style="width: 55px;">
+            <option value="5" th:selected="${itemOfPage == 5}">5</option>
+            <option value="10" th:selected="${itemOfPage == 10}">10</option>
+            <option value="20" th:selected="${itemOfPage == 20}">20</option>
+            <option value="50" th:selected="${itemOfPage == 50}">50</option>
+            <option value="100" th:selected="${itemOfPage == 100}">100</option>
+        </select>
+        entries
+    </label>
+    <table class="table table-bordered">
         <thead>
         <tr>
-            <th>User</th>
-            <th>Product Name</th>
-            <th>Số lượng</th>
-            <th>Giá tiền(VNĐ)</th>
+            <th>Khách Hàng</th>
+            <th>Số lượng SP</th>
             <th>Tổng tiền(VNĐ)</th>
             <th>Ngày thanh toán</th>
+            <th>Chi tiết</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="invoice: ${invoiceList}">
             <td>[[${invoice.userName}]]</td>
-            <td>[[${invoice.productName}]]</td>
-            <td>[[${invoice.quantity}]]</td>
-            <td>[[${invoice.price}]]</td>
+            <td>[[${invoice.totalProduct}]]</td>
             <td>[[${invoice.totalAmount}]]</td>
             <td>[[${invoice.paymentDate}]]</td>
+            <td>
+                <a href="#" class="btn btn-primary rounded open-modal" th:data-id="${invoice.invoiceId}"
+                   data-bs-toggle="modal" data-bs-target="#myModal">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -48,31 +81,119 @@
         <nav>
             <ul class="pagination justify-content-center">
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/show-invoice?pageNum=1'}">First</a>
+                    <a class="page-link color-orange-bold"
+                       th:href="@{'/show-invoice?pageNum=1'}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
                 </li>
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/show-invoice?pageNum=' + ${currentPage - 1}}">Previous</a>
+                    <a class="page-link color-orange-bold"
+                       th:href="@{'/show-invoice?pageNum=' + ${currentPage - 1}}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
                 </li>
                 <li th:class="${currentPage != pageNumber ? 'page-item' : 'page-item active'}"
                     th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
-                    <a class="page-link"
+                    <a class="page-link color-orange-bold"
                        th:href="@{'/show-invoice?pageNum=' + ${pageNumber}}"
                        th:text="${pageNumber}"></a>
                 </li>
                 <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/show-invoice?pageNum=' + ${currentPage + 1}}">Next</a>
+                    <a class="page-link color-orange-bold"
+                       th:href="@{'/show-invoice?pageNum=' + ${currentPage + 1}}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
                 </li>
                 <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/show-invoice?pageNum=' + ${totalPage + 1}}">Last</a>
+                    <a class="page-link color-orange-bold"
+                       th:href="@{'/show-invoice?pageNum=' + ${totalPage + 1}}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
                 </li>
             </ul>
         </nav>
     </div>
 </div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chi tiết hóa đơn</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <table class="table table-bordered" id="invoiceDetail">
+                    <thead>
+                    <tr>
+                        <th>Khách Hàng</th>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const selectElement = document.getElementById('data_product_length');
+
+    selectElement.addEventListener('change', function () {
+        const selectValue = selectElement.value;
+        window.location.href = '/show-invoice?pageNum=1&itemOfPage=' + selectValue;
+    });
+
+    $(document).ready(function () {
+
+        $('.open-modal').on('click', function (e) {
+
+            e.preventDefault();
+            const invoiceId = $(this).data('id');
+
+            console.log(invoiceId);
+
+            $.ajax({
+                type: 'GET',
+                url: '/detail-invoice/' + invoiceId,
+                contentType: 'application/json',
+                success: function (result) {
+                    $('#invoiceDetail tbody').empty();
+                    $.each(result, function (i, invoice) {
+                        var status = invoice.status === true ? 'Đã thanh toán' : 'Chưa thanh toán';
+                        const row = '<tr>' +
+                            '<td>' + invoice.userName + '</td>' +
+                            '<td>' + invoice.productName + '</td>' +
+                            '<td>' + invoice.quantity + '</td>' +
+                            '<td>' + invoice.price + '</td>' +
+                            '<td>' + status + '</td>' +
+                            '</tr>';
+                        $('#invoiceDetail tbody').append(row);
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 <script th:src="@{/js/common.js}"></script>
 

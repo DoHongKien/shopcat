@@ -1,4 +1,4 @@
-package com.assignment.security;
+package com.assignment.security.service;
 
 import com.assignment.entity.Role;
 import com.assignment.entity.User;
@@ -16,7 +16,7 @@ public class UserDetail implements UserDetails {
     private static User user;
 
     public UserDetail(User user) {
-        this.user = user;
+        UserDetail.user = user;
     }
 
     @Override
@@ -27,6 +27,7 @@ public class UserDetail implements UserDetails {
         for(Role role: roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
+
         return authorities;
     }
 

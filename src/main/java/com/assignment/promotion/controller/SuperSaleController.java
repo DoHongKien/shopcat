@@ -6,6 +6,8 @@ import com.assignment.product.service.IProductService;
 import com.assignment.promotion.service.IPromotionService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +54,8 @@ public class SuperSaleController {
     @PostMapping("/add")
     public String addPromotion(@ModelAttribute Promotion promotion, RedirectAttributes redirectAttributes) {
 
+        System.out.println("StartDate: " + promotion.getStartDate());
+        System.out.println("EndDate: " + promotion.getEndDate());
         promotionService.savePromotion(promotion);
         redirectAttributes.addFlashAttribute("message", "Lưu khuyến mãi thành công");
 
@@ -95,33 +99,29 @@ public class SuperSaleController {
 //        return "redirect:/promotion/show";
 //    }
 
-    @GetMapping("/sale/{id}")
-    public String saleProduct(@PathVariable("id") Integer id, Model model) {
+    @GetMapping("/apply/{productId}/{promotionId}")
+    public String applyPromotionToProduct(@PathVariable("productId") Integer productId,
+                                          @PathVariable("promotionId") Integer promotionId) {
 
-        List<Promotion> promotions = promotionService.findAllPromotion();
-        model.addAttribute("promotions", promotions);
+//        Integer idProduct = (Integer) session.getAttribute("productId");
 
-        session.setAttribute("productId", id);
-        return "promotion/sale-product";
-    }
-
-    @GetMapping("/apply/{id}")
-    public String applyPromotionToProduct(@PathVariable("id") Integer promotionId) {
-
-        Integer idProduct = (Integer) session.getAttribute("productId");
-
-        Product productInDB = productService.findById(idProduct);
+        Product productInDB = productService.findById(productId);
         Promotion promotionInDB = promotionService.findById(promotionId);
 
         BigDecimal afterApplyDiscount = productInDB.getPrice()
                 .multiply(BigDecimal.valueOf(promotionInDB.getDiscountPercentage()).divide(BigDecimal.valueOf(100)));
-
         BigDecimal discountPrice = productInDB.getPrice().subtract(afterApplyDiscount);
 
-        promotionService.updateProductInPromotion(promotionInDB.getId(), productInDB.getId());
-        productService.updateDiscountPriceInProduct(productInDB.getId(), discountPrice);
+        int result = afterApplyDiscount.compareTo(promotionInDB.getPromotionSpendLimit());
 
-        session.removeAttribute("productId");
+        if(result < 0 || result == 0) {
+            productService.updateDiscountPriceInProduct(productInDB.getId(), promotionId, discountPrice);
+        }else {
+            productService.updateDiscountPriceInProduct(productInDB.getId(), promotionId, promotionInDB.getPromotionSpendLimit());
+        }
+
+//        promotionService.updateProductInPromotion(promotionInDB.getId(), productInDB.getId());
+
         return "redirect:/cat";
     }
 }

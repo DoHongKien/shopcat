@@ -4,11 +4,9 @@ import com.assignment.FileUploadUtil;
 import com.assignment.dto.Country;
 import com.assignment.entity.Product;
 import com.assignment.entity.ProductCategory;
-import com.assignment.entity.Review;
 import com.assignment.product.service.CountryService;
 import com.assignment.product.service.IProductCateService;
 import com.assignment.product.service.IProductService;
-import com.assignment.review.service.IReviewService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -190,7 +187,7 @@ public class ProductController {
             return "products/add-product";
         }
 
-        if(!multipartFile.isEmpty()) {
+        if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             product.setImage(fileName);
             Product saveProduct = productService.saveProduct(product);
@@ -199,7 +196,7 @@ public class ProductController {
             FileUploadUtil.cleanDir(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         } else {
-            if(product.getImage().isEmpty()) product.setImage(null);
+            if (product.getImage().isEmpty()) product.setImage(null);
             productService.saveProduct(product);
         }
 
@@ -208,8 +205,12 @@ public class ProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable int id, RedirectAttributes redirectAttributes) {
+    public String deleteProduct(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
+
         productService.deleteProduct(id);
+        String userImageDir = "product-images/" + id;
+        FileUploadUtil.removeFile(userImageDir);
+
         redirectAttributes.addFlashAttribute("message", "Sản phẩm có id là " + id + " đã được xóa");
         return "redirect:/products";
     }

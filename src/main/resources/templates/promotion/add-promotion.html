@@ -15,18 +15,28 @@
     <form th:action="@{/promotion/add}" th:object="${promotion}" method="post">
 
         <div class="form-floating mb-3">
-            <input type="date" class="form-control" th:field="*{startDate}">
+            <input type="text" class="form-control" th:field="*{name}">
+            <label>Tên khuyến mãi:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="datetime-local" class="form-control" th:field="*{startDate}">
             <label>Ngày bắt đầu:</label>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="date" class="form-control" th:field="*{endDate}">
+            <input type="datetime-local" class="form-control" th:field="*{endDate}">
             <label>Ngày kết thúc:</label>
         </div>
 
         <div class="form-floating mb-3">
             <input type="number" class="form-control" th:field="*{discountPercentage}">
             <label>Giảm giá(%):</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" th:field="*{promotionSpendLimit}">
+            <label>Giảm tối đa(VNĐ):</label>
         </div>
 
         <div class="mb-3">

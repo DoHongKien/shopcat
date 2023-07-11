@@ -1,7 +1,7 @@
 package com.assignment.user.controller;
 
 import com.assignment.entity.User;
-import com.assignment.security.UserDetail;
+import com.assignment.security.service.UserDetail;
 import com.assignment.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

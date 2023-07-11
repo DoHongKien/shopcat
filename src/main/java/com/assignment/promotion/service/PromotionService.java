@@ -3,14 +3,17 @@ package com.assignment.promotion.service;
 import com.assignment.entity.Promotion;
 import com.assignment.promotion.repo.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class PromotionService implements IPromotionService{
 
-    private PromotionRepository promotionRepository;
+    private final PromotionRepository promotionRepository;
 
     @Autowired
     public PromotionService(PromotionRepository promotionRepository) {
@@ -37,8 +40,8 @@ public class PromotionService implements IPromotionService{
         promotionRepository.deleteById(id);
     }
 
-    @Override
-    public void updateProductInPromotion(Integer id, Integer productId) {
-        promotionRepository.updateProductInPromotion(id, productId);
-    }
+//    @Override
+//    public void updateProductInPromotion(Integer id, Integer productId) {
+//        promotionRepository.updateProductInPromotion(id, productId);
+//    }
 }

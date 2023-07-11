@@ -6,7 +6,7 @@ import com.assignment.entity.*;
 import com.assignment.product.service.IProductService;
 import com.assignment.review.dto.ReviewRequest;
 import com.assignment.review.service.IReviewService;
-import com.assignment.security.UserDetail;
+import com.assignment.security.service.UserDetail;
 import com.assignment.sell.service.ICartDetailService;
 import com.assignment.sell.service.ICartService;
 import com.assignment.sell.service.IInvoiceDetailService;
@@ -207,7 +207,9 @@ public class AddToCartController {
 
             // Update quantity product
             Product pDb = productService.findById(pic.getProductId());
-            productService.updateQtyProduct(pDb.getId(), pDb.getQuantity() - pic.getQuantity());
+            productService.updateQtyProduct(pDb.getId(),
+                    pDb.getQuantity() - pic.getQuantity(),
+                    pDb.getSold() + pic.getQuantity());
 
             // Delete product after payment
             int cartId = cartService.findCartByUser(UserDetail.getId());

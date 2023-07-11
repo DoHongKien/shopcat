@@ -56,8 +56,12 @@
                         <tr th:each="product : ${listCartDetail}">
 <!--                            <input type="hidden" th:name="productId" th:value="${product.productId}">-->
                             <td class="text-left pl-md-5">
-                                <img th:src="@{${product.productIC.pathImage}}" alt="Image cat"
-                                     style="width: 50px; margin-right: 30px;">
+                                <a th:href="@{/sell/detail-product/{id}(id=${product.productId})}"
+                                class="text-decoration-none">
+                                    <img th:src="@{${product.productIC.pathImage}}" alt="Image cat"
+                                         style="width: 50px; margin-right: 30px;">
+                                </a>
+
                                 [[${product.productName}]]
                             </td>
                             <td class="align-middle">

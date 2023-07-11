@@ -24,34 +24,34 @@
 
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="container row border border-1" style="max-width: 1000px; margin: 20px auto;">
+<!--<div class="container row border border-1" style="max-width: 1000px; margin: 20px auto;">-->
 
-    <div class="col-lg-7">
-        <div class="row">
-            <div class="col-md-5">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <img th:src="@{/images/image_cat_vertical.jpg}" style="max-width: 50px; max-height: 50px">
-                    </div>
-                    <div class="col-sm-8">
-                        [[${product.name}]]
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                [[${product.price}]]
-            </div>
-            <div class="col-md-3">
-                Số lượng: [[${product.qty}]]
-            </div>
-        </div>
-    </div>
+<!--    <div class="col-lg-7">-->
+<!--        <div class="row">-->
+<!--            <div class="col-md-5">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-sm-4">-->
+<!--                        <img th:src="@{/images/image_cat_vertical.jpg}" style="max-width: 50px; max-height: 50px">-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-8">-->
+<!--                        [[${product.name}]]-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-4">-->
+<!--                [[${product.price}]]-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                Số lượng: [[${product.qty}]]-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
-    <div class="col-lg-5">
-        Tong tien: [[${product.price * product.qty}]]
-        <a th:href="@{/buy-now/payment}" class="btn btn-info">Thanh toán</a>
-    </div>
-</div>
+<!--    <div class="col-lg-5">-->
+<!--        Tong tien: [[${product.price * product.qty}]]-->
+<!--        <a th:href="@{/buy-now/payment}" class="btn btn-info">Thanh toán</a>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 <!-- Checkout Start -->
@@ -172,35 +172,39 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
+            <div class="card border-blue-light mb-5">
+                <div class="card-header background-blue-light border-0">
                     <h4 class="font-weight-semi-bold m-0">Order Total</h4>
                 </div>
                 <div class="card-body">
                     <h5 class="font-weight-medium mb-3">Products</h5>
                     <div class="d-flex justify-content-between">
                         <p>[[${product.name}]]</p>
-                        <p>[[${product.price}]]₫</p>
+                        <p><span id="number1">[[${product.price}]]</span>₫</p>
                     </div>
                     <hr class="mt-0">
                     <div class="d-flex justify-content-between mb-3 pt-1">
                         <h6 class="font-weight-medium">Subtotal</h6>
-                        <h6 class="font-weight-medium">$150</h6>
+                        <h6 class="font-weight-medium">
+                            <span id="number2">[[${product.totalAmount}]]</span>₫
+                        </h6>
                     </div>
                     <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">$10</h6>
+                        <h6 class="font-weight-medium">0</h6>
                     </div>
                 </div>
-                <div class="card-footer border-secondary bg-transparent">
+                <div class="card-footer border-blue-light bg-transparent">
                     <div class="d-flex justify-content-between mt-2">
                         <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold">$160</h5>
+                        <h5 class="font-weight-bold">
+                            <span id="number3">[[${product.totalAmount}]]</span>₫
+                        </h5>
                     </div>
                 </div>
             </div>
-            <div class="card border-secondary mb-5">
-                <div class="card-header bg-secondary border-0">
+            <div class="card border-blue-light mb-5">
+                <div class="card-header background-blue-light border-0">
                     <h4 class="font-weight-semi-bold m-0">Payment</h4>
                 </div>
                 <div class="card-body">
@@ -223,8 +227,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer border-secondary bg-transparent">
-                    <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
+                <div class="card-footer border-blue-light">
+                    <a th:href="@{/buy-now/payment}" class="btn btn-lg btn-block background-orange-bold font-weight-bold rounded-0 my-3 py-3">Place Order</a>
                 </div>
             </div>
         </div>

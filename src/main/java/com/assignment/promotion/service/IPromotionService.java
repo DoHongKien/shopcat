@@ -15,5 +15,5 @@ public interface IPromotionService {
 
     void deletePromotion(Integer id);
 
-    void updateProductInPromotion(Integer id, Integer productId);
+//    void updateProductInPromotion(Integer id, Integer productId);
 }

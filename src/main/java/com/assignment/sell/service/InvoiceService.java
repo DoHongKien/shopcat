@@ -31,6 +31,11 @@ public class InvoiceService implements IInvoiceService{
     }
 
     @Override
+    public List<InvoiceDto> findInvoiceDetailByInvoice(Integer invoiceId) {
+        return invoiceRepository.findInvoiceDetailByInvoice(invoiceId);
+    }
+
+    @Override
     public Page<InvoiceDto> findAllInvoiceUser(Pageable pageable) {
         return invoiceRepository.findAllInvoiceUser(pageable);
     }

@@ -13,12 +13,18 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        String productImage = "product-images";
-        Path path = Paths.get(productImage);
+        exposeDirectory("product-images", registry);
+        exposeDirectory("user-image", registry);
+    }
+
+    private void exposeDirectory(String pathPattern, ResourceHandlerRegistry registry) {
+        Path path = Paths.get(pathPattern);
         String abolutePath = path.toFile().getAbsolutePath();
 
-        String localPath = productImage + "/**";
-        registry.addResourceHandler(localPath).addResourceLocations("file:/" + abolutePath + "/");
+        String logicalPath = pathPattern + "/**";
+
+        registry.addResourceHandler(logicalPath)
+                .addResourceLocations("file:/" + abolutePath + "/");
     }
 
 }

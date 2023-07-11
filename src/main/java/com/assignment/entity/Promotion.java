@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,19 +21,22 @@ public class Promotion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "start_date")
-    private Date startDate;
+    private String name;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "discount_percentage")
     private Integer discountPercentage;
 
+    @Column(name = "promotion_spend_limit")
+    private BigDecimal promotionSpendLimit;
+
     @Column(name = "status")
     private boolean status;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
 }

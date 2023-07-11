@@ -6,7 +6,7 @@ import com.assignment.entity.InvoiceDetail;
 import com.assignment.entity.Product;
 import com.assignment.entity.User;
 import com.assignment.product.service.IProductService;
-import com.assignment.security.UserDetail;
+import com.assignment.security.service.UserDetail;
 import com.assignment.sell.service.IInvoiceDetailService;
 import com.assignment.sell.service.IInvoiceService;
 import com.assignment.user.service.UserService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Controller
@@ -102,7 +101,9 @@ public class BuyNowController {
         invoiceService.saveInvoice(invoice);
         invoiceDetailService.saveInvoiceDetail(invoiceDetail);
 
-        productService.updateQtyProduct(productInfo.getId(), product.getQuantity() - productInfo.getQty());
+        productService.updateQtyProduct(productInfo.getId(),
+                product.getQuantity() - productInfo.getQty(),
+                product.getSold() + productInfo.getQty());
 
         redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được thanh toán");
         session.removeAttribute("productInfo");

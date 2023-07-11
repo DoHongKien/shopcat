@@ -89,7 +89,8 @@
                         <small class="fas fa-star-half-alt"></small>
                         <small class="far fa-star"></small>
                     </div>
-                    <small class="pt-1">([[${reviews.size}]] Reviews)</small>
+                    <small class="pt-1 mr-1">([[${reviews.size}]] Đánh Giá)</small> |
+                    <small class="pt-1 ml-1">[[${product.sold}]] Đã Bán</small>
                 </div>
                 <div class="d-flex">
                     <th:block th:if="${product.discountPrice == null}">
@@ -104,7 +105,7 @@
                         <input type="hidden" th:name="price" th:value="${product.discountPrice}">
                     </th:block>
                 </div>
-                <p class="mb-4">[[${product.description}]]</p>
+                <p class="mb-4">[[${product.shortDescription}]]</p>
                 <div class="d-flex mb-3">
                     <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
 
@@ -222,7 +223,8 @@
                                     <h6 class="dropdown">
                                         [[${review.user.name}]]
                                         <small> - <i>[[${review.createdAt}]]</i></small>
-                                        <a href="#" class="dropdown-toggle ml-2" data-bs-toggle="dropdown" th:if="${review.user.id == userId}">
+                                        <a href="#" class="dropdown-toggle ml-2" data-bs-toggle="dropdown"
+                                           th:if="${review.user.id == userId}">
                                             <i class="fas fa-ellipsis-v" style="color: #6f6f6f;"></i>
                                         </a>
 
@@ -348,6 +350,8 @@
     </div>
 </div>
 
+<div th:replace="~{fragments :: footer}"></div>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -370,14 +374,6 @@
 
             $('#ratingStar').val(rating);
         });
-
-        // $('.starShow').each(function () {
-        //     var reviewId = $(this).closest('.media').find('input').attr('id').split('_')[1];
-        //     var ratingValue = $('#ratingInDB_' + reviewId).val();
-        //     console.log('ratingInDB_' + reviewId + '= ' +ratingValue);
-        //     $(this).find('.starShow:lt(' + ratingValue + ')').addClass('filled');
-        //     $(this).find('.filled i').removeClass('far fa-star').addClass('fas fa-star');
-        // });
 
         const ratingValue = $('#ratingInDB').val();
         $('.starShow:lt(' + ratingValue + ')').addClass('filled');

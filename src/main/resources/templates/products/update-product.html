@@ -8,16 +8,6 @@
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        .errorMsg {
-            color: #721c24;
-            background-color: #f8d7da;
-            height: 40px;
-            line-height: 40px;
-            padding-left: 10px;
-        }
-    </style>
 </head>
 <body>
 
@@ -67,7 +57,7 @@
         </div>
 
         <div class="form-floating mb-3">
-            <select class="form-select" th:name="category">
+            <select class="form-select" th:field="*{category}">
                 <option th:each="cat : ${productCategories}"
                         th:value="${cat.id}"
                         th:text="${cat.name}"
@@ -83,8 +73,13 @@
         </div>
 
         <div class="form-floating mb-3">
-            <textarea class="form-control" th:field="*{description}"></textarea>
-            <label>Mô tả:</label>
+            <textarea class="form-control" th:field="*{shortDescription}" style="min-height: 80px"></textarea>
+            <label>Mô tả ngắn:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <textarea class="form-control" th:field="*{description}"style="min-height: 160px"></textarea>
+            <label>Mô tả chi tiết:</label>
         </div>
 
         <div class="mb-3">
@@ -125,10 +120,6 @@
         if (input_tuoitho.value.trim() === '') {
             input_tuoitho.value = th;
         }
-    });
-
-    $(document).ready(function () {
-        $('#country-select').select2();
     });
 </script>
 

@@ -9,6 +9,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" th:src="@{/webjars/chartjs/2.9.4/Chart.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/custom.css}">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 </head>
 <body>
 
@@ -34,7 +36,7 @@
         <td>[[${product.price}]]</td>
         <td>[[${product.origin}]]</td>
         <td>[[${product.lifespan}]]</td>
-        <td>[[${product.createdDate}]]</td>
+        <td th:text="${#temporals.format(product.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
         <td>
             <a th:href="@{/promotion/sale/{id}(id=${product.id})}" class="btn btn-outline-success">Sale</a>
         </td>
@@ -44,15 +46,15 @@
 
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
-        <div class="col-sm-12 col-xl-6">
+        <div class="col-sm-12 col-xl-6 form-group">
 
-            <form th:action="@{/statistics}" class="form-inline">
+            <form th:action="@{/statistics}">
                 Search:
                 <select class="form-select" th:name="month">
                     <option th:each="month: ${months}" th:value="${month}">[[${month}]]</option>
                 </select>
-                <button type="submit" class="btn btn-primary mt-3">Search</button>
-                <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+                <button type="submit" class="btn btn-primary rounded mt-3">Tìm kiếm</button>
+                <button type="button" class="btn btn-dark rounded mt-3" onclick="clearSearch()">Clear</button>
             </form>
 
             <div class="background-blue-light text-center rounded p-4 mt-3">
@@ -62,20 +64,20 @@
                 <canvas id="topMonth"></canvas>
             </div>
         </div>
-        <div class="col-sm-12 col-xl-6">
+        <div class="col-sm-12 col-xl-6 form-group">
 
-            <form th:action="@{/statistics}" class="form-inline">
+            <form th:action="@{/statistics}">
                 Search:
                 <input type="date" th:name="week" class="form-control"
                        placeholder="Tìm kiếm..."
                 >
-                <button type="submit" class="btn btn-primary mt-3">Search</button>
-                <button type="button" class="btn btn-dark mt-3" onclick="clearSearch()">Clear</button>
+                <button type="submit" class="btn btn-primary rounded mt-3">Tìm kiếm</button>
+                <button type="button" class="btn btn-dark rounded mt-3" onclick="clearSearch()">Clear</button>
             </form>
 
             <div class="background-blue-light text-center rounded p-4 mt-3">
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Sản phẩm bán chạy theo tuần</h6>
+                    <h6 class="mb-0">Sản phẩm bán chạy 7 ngày qua</h6>
                 </div>
                 <canvas id="topWeek"></canvas>
             </div>

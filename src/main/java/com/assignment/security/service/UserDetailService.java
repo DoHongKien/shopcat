@@ -1,4 +1,4 @@
-package com.assignment.security;
+package com.assignment.security.service;
 
 import com.assignment.entity.User;
 import com.assignment.user.repository.UserRepository;

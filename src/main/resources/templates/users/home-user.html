@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Users Management</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!--SweetAlert2 show notice -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/custom.css}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -13,13 +28,24 @@
 
 <div th:replace="~{fragments :: navbar}"></div>
 
-<div class="container">
-    <a class="btn btn-info" th:href="@{/users/view-add}">Add</a>
-    <table class="table table-triped table-hover table-responsive">
+<div class="container mt-5">
+
+    <form th:action="@{/users}" class="mb-3">
+        <input type="search" class="form-control" th:name="keyword" placeholder="Nhập tên cần tìm..."
+               style="max-width: 400px;">
+        <button type="submit" class="btn btn-success">Tìm kiếm</button>
+    </form>
+
+    <a class="btn btn-info mb-2" th:href="@{/users/view-add}">
+        <i class="fas fa-save"></i>
+    </a>
+
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th>Id</th>
             <th>Tên</th>
+            <th>Ảnh</th>
             <th>Ngày Sinh</th>
             <th>Giới Tính</th>
             <th>Email</th>
@@ -31,19 +57,94 @@
         <tr th:each="user : ${listUsers}">
             <td>[[${user.id}]]</td>
             <td>[[${user.name}]]</td>
+            <td>
+                <img th:if="${user.image != null}" th:src="@{${user.userImage}}"
+                     style="width: 100px;">
+            </td>
             <td>[[${user.dob}]]</td>
             <td th:text="${user.sex == 1 ? 'Male' : 'Female'}"></td>
             <td>[[${user.email}]]</td>
-            <td th:text="${user.status == true ? 'Enabled' : 'Disabled'}"></td>
             <td>
-                <a th:href="@{/users/detail/{id}(id=${user.id})}" class="btn btn-primary">Chi tiết</a>
+                <span th:if="${user.status == true}" class="d-flex justify-content-center">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </span>
+                <span th:if="${user.status == false}" class="d-flex justify-content-center">
+                    <i class="fas fa-check-circle fa-2x color-gray"></i>
+                </span>
+            </td>
+            <td>
+                <a th:href="@{/users/detail/{id}(id=${user.id})}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i>
+                </a>
                 <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-danger"
-                   onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">Xóa</a>
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
+                    <i class="fas fa-trash"></i>
+                </a>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <span>Trang: [[${currentPage}]] / [[${totalPage + 1}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>Không tìm thấy người dùng.</span>
+    </div>
+
+    <div th:if="${totalPage > 0}">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link"
+                       th:href="@{'/users?pageNum=1' + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link"
+                       th:href="@{'/users?pageNum=' + ${pageNum - 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                    th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                    <a class="page-link"
+                       th:href="@{'/users?pageNum=' + ${i} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${i}]]</a>
+                </li>
+                <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link"
+                       th:href="@{'/users?pageNum=' + ${pageNum + 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li th:class="${currentPage < totalPage + 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link"
+                       th:href="@{'/users?pageNum=' + ${totalPage + 1} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
 </div>
+
+<script>
+
+    if ([[${message != null}]]) {
+        showAlert('success', 'Thành công', "[[${message}]]")
+    }
+
+    function showAlert(icon, title, message) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: message
+        });
+    }
+</script>
 
 <script th:src="@{/js/common.js}"></script>
 

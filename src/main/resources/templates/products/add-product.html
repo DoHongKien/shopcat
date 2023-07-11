@@ -9,16 +9,6 @@
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        .errorMsg {
-            color: #721c24;
-            background-color: #f8d7da;
-            height: 40px;
-            line-height: 40px;
-            padding-left: 10px;
-        }
-    </style>
 </head>
 <body>
 
@@ -81,8 +71,13 @@
         </div>
 
         <div class="form-floating mb-3">
-            <textarea class="form-control" th:field="*{description}" style="min-height: 80px"></textarea>
-            <label>Mô tả:</label>
+            <textarea class="form-control" th:field="*{shortDescription}" style="min-height: 80px"></textarea>
+            <label>Mô tả ngắn:</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <textarea class="form-control" th:field="*{description}" style="min-height: 160px"></textarea>
+            <label>Mô tả chi tiết:</label>
         </div>
 
         <div class="mb-3">
@@ -96,34 +91,6 @@
 </div>
 
 <script type="text/javascript">
-    // const sl = 1;
-    // const gt = 1000;
-    // const th = 1;
-    // document.getElementById("soluong").value = sl;
-    // document.getElementById("giatien").value = gt;
-    // document.getElementById("tuoitho").value = th;
-    //
-    // const input_soluong = document.getElementById("soluong");
-    // const input_giatien = document.getElementById("giatien");
-    // const input_tuoitho = document.getElementById("tuoitho");
-    //
-    // input_soluong.addEventListener("blur", function () {
-    //     if (input_soluong.value.trim() === '') {
-    //         input_soluong.value = sl;
-    //     }
-    // });
-    //
-    // input_giatien.addEventListener("blur", function () {
-    //     if (input_giatien.value.trim() === '') {
-    //         input_giatien.value = gt;
-    //     }
-    // });
-    //
-    // input_tuoitho.addEventListener("blur", function () {
-    //     if (input_tuoitho.value.trim() === '') {
-    //         input_tuoitho.value = th;
-    //     }
-    // });
 
     //Check image
     $(document).ready(function () {

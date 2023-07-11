@@ -1,6 +1,7 @@
 package com.assignment;
 
 
+import com.assignment.dto.InvoiceDto;
 import com.assignment.dto.InvoiceStatisticDto;
 import com.assignment.entity.Invoice;
 import com.assignment.entity.InvoiceDetail;
@@ -105,5 +106,14 @@ public class InvoiceRepositoryTest {
         List<InvoiceStatisticDto> topSelling = invoiceDetailRepository.findTopSelling(6, 2023);
 
         assertThat(topSelling).isNotNull();
+    }
+
+    @Test
+    public void findInvoiceDetailByInvoice() {
+        List<InvoiceDto> invoiceDtos = invoiceRepository.findInvoiceDetailByInvoice(46);
+
+        invoiceDtos.forEach(i -> System.out.println(i.getUserName() + " | " + i.getProductName() + " | " + i.getQuantity() + " | " + i.getPrice() + " | " + i.getStatus()));
+
+        assertThat(invoiceDtos).isNotNull();
     }
 }

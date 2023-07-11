@@ -49,6 +49,15 @@ public class ProductRepositoryTest {
         assertThat(product).isNotNull();
     }
 
+    @Test
+    public void findProductInStock() {
+
+        List<Product> products = productRepository.findProductInStock();
+        products.forEach(p -> System.out.println(p.getId() + " | " + p.getName()));
+
+        assertThat(products).isNotNull();
+    }
+
 //    @Test
 //    public void findTop5ProductByCreatedDateAsc() {
 //        List<Product> products = productRepository.findFirst10ByOrderByCreatedDateAsc();

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,17 +24,31 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    private String image;
+
     @Column(name = "dob")
     private Date dob;
 
     @Column(name = "sex")
     private Integer sex;
 
+    @Column(name = "phone_number")
+    private String phone;
+
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "status")
     private boolean status;
@@ -55,5 +70,11 @@ public class User {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    @Transient
+    public String getUserImage() {
+        if(image == null || id == null) return "/images/default-user.png";
+        return "/user-image/" + this.id + "/" + this.image;
     }
 }

@@ -15,6 +15,8 @@ public interface IInvoiceService {
 
     Page<InvoiceDto> findAllInvoiceUser(Pageable pageable);
 
+    List<InvoiceDto> findInvoiceDetailByInvoice(Integer invoiceId);
+
     Invoice saveInvoice(Invoice invoice);
 
     void deleteInvoice(Integer id);

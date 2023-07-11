@@ -1,5 +1,6 @@
 package com.assignment.product.service;
 
+import com.assignment.dto.ProductContainsPromotion;
 import com.assignment.entity.Product;
 import com.assignment.product.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -82,19 +83,21 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductContainsPromotion> findAllProductContainsPromotion() {
+        return productRepository.findAllProductContainsPromotion();
+    }
+
+    @Override
     public Product saveProduct(Product product) {
         boolean isUpdating = product.getId() != null;
+        LocalDateTime now = LocalDateTime.now();
 
         if (isUpdating) {
             Product productInDb = findById(product.getId());
-
-            if(productInDb.getCreatedDate() != null) {
-                product.setCreatedDate(productInDb.getCreatedDate());
-            } else {
-                product.setCreatedDate(new Date());
-            }
+            product.setCreatedDate(productInDb.getCreatedDate());
+            product.setUpdatedDate(now);
         } else {
-            product.setCreatedDate(new Date());
+            product.setCreatedDate(now);
         }
 
         return productRepository.save(product);
@@ -106,12 +109,12 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updateQtyProduct(int id, int qty) {
-        productRepository.updateQtyProduct(id, qty);
+    public void updateQtyProduct(int id, int qty, int sold) {
+        productRepository.updateQtyProduct(id, qty, sold);
     }
 
     @Override
-    public void updateDiscountPriceInProduct(Integer id, BigDecimal discountPrice) {
-        productRepository.updateDiscountPriceInProduct(id, discountPrice);
+    public void updateDiscountPriceInProduct(Integer id, Integer promotionId, BigDecimal discountPrice) {
+        productRepository.updateDiscountPriceInProduct(id, promotionId, discountPrice);
     }
 }
