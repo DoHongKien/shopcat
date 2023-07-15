@@ -39,8 +39,8 @@ public class MainController {
     @Autowired
     private HttpSession session;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
 
 //    @Autowired
 //    private JwtUtils jwtUtils;
@@ -108,6 +108,7 @@ public class MainController {
         List<ProductContainsPromotion> productContainsPromotions = productService.findAllProductContainsPromotion();
         LocalDateTime toDay = LocalDateTime.now();
 
+        // Tự động hủy khuyến mãi của sản phẩm khi ngày kết thúc < hôm nay
         productContainsPromotions.forEach(p -> {
             int compareToDate = toDay.compareTo(p.getEndDate());
             if(compareToDate > 0) {

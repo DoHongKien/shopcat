@@ -1,7 +1,9 @@
 package com.assignment.config;
 
-import org.springframework.cache.CacheManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -24,9 +26,8 @@ public class CacheConfig {
         return new LettuceConnectionFactory();
     }
 
-
     @Bean
-    public CacheManager cacheManager() {
+    public RedisCacheManager cacheManager() {
 
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30))
@@ -48,5 +49,21 @@ public class CacheConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean
+    public KeyGenerator keyGenerator() {
+        return ((target, method, params) -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(target.getClass().getSimpleName());
+            sb.append(":");
+            sb.append(method.getName());
+
+            for (Object obj : params) {
+                sb.append(":");
+                sb.append(obj.toString());
+            }
+            return sb.toString();
+        });
     }
 }

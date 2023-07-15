@@ -29,7 +29,7 @@ public class ProductCateController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detailProductCate(@PathVariable("id") Integer id, Model model) {
+    public String detailProductCate(@PathVariable("id") Integer id, Model model){
 
         List<ProductCategory> productCategories = service.findAllPrductCate();
         ProductCategory productCategory = service.findById(id);

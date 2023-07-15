@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class CountryService {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     public CountryService(RestTemplate restTemplate, RedisTemplate<String, Object> redisTemplate) {
@@ -24,7 +24,7 @@ public class CountryService {
         this.redisTemplate = redisTemplate;
     }
 
-    @Cacheable("countriesCache")
+    @Cacheable(value = "countriesCache", keyGenerator = "keyGenerator")
     public List<Country> getAllCountry() {
 
         List<Country> listCountry;
