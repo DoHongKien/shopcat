@@ -4,9 +4,14 @@ import com.assignment.FileUploadUtil;
 import com.assignment.dto.Country;
 import com.assignment.entity.Product;
 import com.assignment.entity.ProductCategory;
+import com.assignment.product.export.ProductCsvExporter;
+import com.assignment.product.export.ProductExcelExporter;
+import com.assignment.product.export.ProductPdfExporter;
 import com.assignment.product.service.CountryService;
 import com.assignment.product.service.IProductCateService;
 import com.assignment.product.service.IProductService;
+import com.itextpdf.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -213,5 +218,26 @@ public class ProductController {
 
         redirectAttributes.addFlashAttribute("message", "Sản phẩm có id là " + id + " đã được xóa");
         return "redirect:/products";
+    }
+
+    @GetMapping("/export/csv")
+    public void exportToCsv(HttpServletResponse response) throws IOException {
+        List<Product> products = productService.findAll();
+        ProductCsvExporter csvExporter = new ProductCsvExporter();
+        csvExporter.export(response, products);
+    }
+
+    @GetMapping("/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        List<Product> products = productService.findAll();
+        ProductExcelExporter excelExporter = new ProductExcelExporter();
+        excelExporter.export(response, products);
+    }
+
+    @GetMapping("/export/pdf")
+    public void exportToPdf(HttpServletResponse response) throws IOException, DocumentException {
+        List<Product> products = productService.findAll();
+        ProductPdfExporter pdfExporter = new ProductPdfExporter();
+        pdfExporter.export(response, products);
     }
 }

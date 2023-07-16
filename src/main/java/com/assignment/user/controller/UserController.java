@@ -3,7 +3,12 @@ package com.assignment.user.controller;
 import com.assignment.FileUploadUtil;
 import com.assignment.entity.Role;
 import com.assignment.entity.User;
+import com.assignment.user.export.UserCsvExporter;
+import com.assignment.user.export.UserExcelExporter;
+import com.assignment.user.export.UserPdfExporter;
 import com.assignment.user.service.UserService;
+import com.itextpdf.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -43,7 +48,7 @@ public class UserController {
         int startPage = Math.max(1, currentPage - 1);
         int endPage = Math.min(startPage + 2, totalPage);
 
-        if(startPage + 1 == totalPage && startPage > 1) {
+        if (startPage + 1 == totalPage && startPage > 1) {
             startPage -= 1;
         }
 
@@ -108,5 +113,29 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("message", "Xóa thành công thông tin người dùng");
         return "redirect:/users";
+    }
+
+    @GetMapping("/export/csv")
+    public void exportToCsv(HttpServletResponse response) throws IOException {
+
+        List<User> users = userService.findAll();
+        UserCsvExporter csvExporter = new UserCsvExporter();
+        csvExporter.export(users, response);
+    }
+
+    @GetMapping("/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+
+        List<User> users = userService.findAll();
+        UserExcelExporter excelExporter = new UserExcelExporter();
+        excelExporter.export(users, response);
+    }
+
+    @GetMapping("/export/pdf")
+    public void exportToPdf(HttpServletResponse response) throws IOException, DocumentException {
+
+        List<User> users = userService.findAll();
+        UserPdfExporter pdfExporter = new UserPdfExporter();
+        pdfExporter.export(users, response);
     }
 }

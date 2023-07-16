@@ -36,9 +36,17 @@
         <button type="submit" class="btn btn-success">Tìm kiếm</button>
     </form>
 
-    <a class="btn btn-info mb-2" th:href="@{/users/view-add}">
-        <i class="fas fa-save"></i>
-    </a>
+
+
+    <div class="mb-3">
+        <a th:href="@{/users/view-add}" class="fas fa-user-plus fa-2x icon-gray mr-2"></a>
+
+        <a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-gray mr-2"></a>
+
+        <a th:href="@{/users/export/excel}" class="fas fa-file-excel fa-2x icon-gray mr-2"></a>
+
+        <a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-gray"></a>
+    </div>
 
     <table class="table table-bordered">
         <thead>
