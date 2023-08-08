@@ -1,30 +1,20 @@
 package com.assignment;
 
-import com.assignment.dto.LoginRequest;
 import com.assignment.dto.ProductContainsPromotion;
 import com.assignment.entity.Product;
 import com.assignment.entity.ProductCategory;
 import com.assignment.entity.Review;
-import com.assignment.entity.User;
 import com.assignment.product.service.IProductCateService;
 import com.assignment.product.service.IProductService;
 import com.assignment.promotion.repo.PromotionRepository;
 import com.assignment.review.dto.ReviewRequest;
 import com.assignment.review.service.IReviewService;
-//import com.assignment.security.jwt.JwtUtils;
 import com.assignment.security.service.UserDetail;
-import com.assignment.sell.service.ICartService;
 import com.assignment.sell.service.IInvoiceDetailService;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,19 +29,11 @@ public class MainController {
     @Autowired
     private HttpSession session;
 
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-
-//    @Autowired
-//    private JwtUtils jwtUtils;
-
     private IProductService productService;
 
     private IProductCateService productCateService;
 
     private IReviewService reviewService;
-
-    private PromotionRepository promotionRepository;
 
     private IInvoiceDetailService invoiceDetailService;
 
@@ -59,12 +41,10 @@ public class MainController {
     public MainController(IProductService productService,
                           IProductCateService productCateService,
                           IReviewService reviewService,
-                          PromotionRepository promotionRepository,
                           IInvoiceDetailService invoiceDetailService) {
         this.productService = productService;
         this.productCateService = productCateService;
         this.reviewService = reviewService;
-        this.promotionRepository = promotionRepository;
         this.invoiceDetailService = invoiceDetailService;
     }
 
@@ -74,31 +54,9 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String viewLoginPage(Model model) {
-//        int countProductInCart = cartService.countCartDetailByUser(UserDetail.getId());
-//
-//        session.setAttribute("countProductInCart", countProductInCart);
-//        model.addAttribute("loginRequest", new LoginRequest());
+    public String viewLoginPage() {
         return "login";
     }
-
-//    @PostMapping("/login")
-//    public String checkLogin(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletResponse response) {
-//
-//        Authentication authentication = authenticationManager
-//                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-//        System.out.println("ID USER: " + userDetail.getUsername());
-//
-//        ResponseCookie jwtCookie = jwtUtils.generateJwtCookies(userDetail);
-//
-//        response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-//
-//        return "redirect:/cat";
-//    }
 
     @GetMapping("/cat")
     public String viewHomePage(@RequestParam(value = "keyword", required = false) String keyword,
@@ -116,7 +74,7 @@ public class MainController {
             }
         });
 
-        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+        List<ProductCategory> productCategories = productCateService.findAllProductCate();
 
         Page<Product> productPage = productService.findByPage(pageNum, keyword);
         List<Product> products = productPage.getContent();
@@ -135,7 +93,7 @@ public class MainController {
         model.addAttribute("productCategories", productCategories);
 
         model.addAttribute("products", products);
-        model.addAttribute("userId", "User Id: " + UserDetail.getId());
+//        model.addAttribute("userId", "User Id: " + UserDetail.getId());
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPage", totalPage - 1);
@@ -147,10 +105,14 @@ public class MainController {
     }
 
     @GetMapping("/sell/detail-product/{id}")
-    public String viewDetailProduct(@PathVariable("id") Integer id, Model model) {
+    public String viewDetailProduct(@PathVariable("id") Integer id, Model model, HttpServletRequest request) {
 
-        int countBuyProduct = invoiceDetailService.countBuyProduct(UserDetail.getId(), id);
-        int countReviewProduct = reviewService.countReviewProduct(UserDetail.getId(), id);
+        int countBuyProduct = 0;
+        int countReviewProduct = 0;
+        if(request.getRemoteUser() != null) {
+            countBuyProduct = invoiceDetailService.countBuyProduct(UserDetail.getId(), id);
+            countReviewProduct = reviewService.countReviewProduct(UserDetail.getId(), id);
+        }
 
         List<Review> reviews = reviewService.findReviewByProduct(id);
         Product product = productService.findById(id);
@@ -158,7 +120,7 @@ public class MainController {
         model.addAttribute("reviewRequest", new ReviewRequest());
         model.addAttribute("reviews", reviews);
         model.addAttribute("productId", id);
-        model.addAttribute("userId", UserDetail.getId());
+//        model.addAttribute("userId", UserDetail.getId());
         model.addAttribute("countBuyProduct", countBuyProduct);
         model.addAttribute("countReviewProduct", countReviewProduct);
         return "sell/product-detail";

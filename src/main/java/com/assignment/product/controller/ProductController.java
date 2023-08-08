@@ -127,7 +127,7 @@ public class ProductController {
                                    @PathVariable(value = "category", required = false) String category,
                                    Model model) {
 
-        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+        List<ProductCategory> productCategories = productCateService.findAllProductCate();
 
         Page<Product> products = productService.findByCategoryName(pageNum, category);
 
@@ -158,7 +158,7 @@ public class ProductController {
 
         Product product = productService.findById(id);
         List<Country> countries = countryService.getAllCountry();
-        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+        List<ProductCategory> productCategories = productCateService.findAllProductCate();
 
         model.addAttribute("countries", countries);
         model.addAttribute("productCategories", productCategories);
@@ -170,7 +170,7 @@ public class ProductController {
     public String viewAdd(Model model) {
 
         List<Country> countries = countryService.getAllCountry();
-        List<ProductCategory> productCategories = productCateService.findAllPrductCate();
+        List<ProductCategory> productCategories = productCateService.findAllProductCate();
 
         model.addAttribute("countries", countries);
         model.addAttribute("productCategories", productCategories);

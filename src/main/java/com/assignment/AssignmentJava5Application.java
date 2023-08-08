@@ -13,8 +13,8 @@ public class AssignmentJava5Application {
         SpringApplication.run(AssignmentJava5Application.class, args);
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(CountryService countryService) {
-        return commanRunner -> countryService.getAllCountry();
-    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(CountryService countryService) {
+//        return commanRunner -> countryService.getAllCountry();
+//    }
 }

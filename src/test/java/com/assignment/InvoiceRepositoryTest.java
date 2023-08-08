@@ -52,18 +52,15 @@ public class InvoiceRepositoryTest {
         Invoice invoice = new Invoice();
         invoice.setUser(user);
         invoice.setTotalAmount(BigDecimal.valueOf(10000));
-        invoice.setStatus(true);
 
         InvoiceDetail invoiceDetail = new InvoiceDetail();
         invoiceDetail.setQuantity(2);
         invoiceDetail.setPrice(BigDecimal.valueOf(6000));
-        invoiceDetail.setStatus(true);
         invoiceDetail.setProduct(product1);
 
         InvoiceDetail invoiceDetail1 = new InvoiceDetail();
         invoiceDetail1.setQuantity(1);
         invoiceDetail1.setPrice(BigDecimal.valueOf(4000));
-        invoiceDetail1.setStatus(true);
         invoiceDetail1.setProduct(product1);
         invoiceDetail1.setProduct(product2);
 
@@ -115,5 +112,16 @@ public class InvoiceRepositoryTest {
         invoiceDtos.forEach(i -> System.out.println(i.getUserName() + " | " + i.getProductName() + " | " + i.getQuantity() + " | " + i.getPrice() + " | " + i.getStatus()));
 
         assertThat(invoiceDtos).isNotNull();
+    }
+
+    @Test
+    public void findAllInvoiceTest() {
+        List<Invoice> details = invoiceRepository.findAllWithProduct();
+        for(Invoice i: details) {
+            for(InvoiceDetail id: i.getInvoiceDetails()) {
+                System.out.println(id.getProduct().getPathImage());
+            }
+        }
+        assertThat(details).isNotNull();
     }
 }

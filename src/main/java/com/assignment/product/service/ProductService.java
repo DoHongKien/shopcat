@@ -3,24 +3,16 @@ package com.assignment.product.service;
 import com.assignment.dto.ProductContainsPromotion;
 import com.assignment.entity.Product;
 import com.assignment.product.repository.IProductRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -110,8 +102,10 @@ public class ProductService implements IProductService {
             Product productInDb = findById(product.getId());
             product.setCreatedDate(productInDb.getCreatedDate());
             product.setUpdatedDate(now);
+            product.setSold(productInDb.getSold());
         } else {
             product.setCreatedDate(now);
+            product.setSold(0);
         }
 
         return productRepository.save(product);

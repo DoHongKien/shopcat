@@ -173,16 +173,16 @@
                     <span>[[${product.quantity}]] sản phẩm có sẵn</span>
                 </div>
 
-                <th:block sec:authorize="hasAnyAuthority('GUEST', 'USER', 'ADMIN')">
+<!--                <th:block sec:authorize="hasAnyAuthority('GUEST', 'USER', 'ADMIN')">-->
                     <button id="addToCart" class="btn background-orange-bold rounded-0 px-3 mr-1">
                         <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
                     </button>
-                </th:block>
-                <th:block sec:authorize="hasAnyAuthority('USER','ADMIN')">
+<!--                </th:block>-->
+<!--                <th:block sec:authorize="hasAnyAuthority('USER','ADMIN')">-->
                     <button id="buyNowButton" class="btn background-orange-bold rounded-0 px-3">
                         <i class="fa fa-shopping-cart mr-1"></i> Buy Now
                     </button>
-                </th:block>
+<!--                </th:block>-->
             </form>
         </div>
     </div>
@@ -224,7 +224,8 @@
                                         [[${review.user.name}]]
                                         <small> - <i>[[${review.createdAt}]]</i></small>
                                         <a href="#" class="dropdown-toggle ml-2" data-bs-toggle="dropdown"
-                                           th:if="${review.user.id == userId}">
+                                        >
+                                            <!--th:if="${review.user.id == userId}"-->
                                             <i class="fas fa-ellipsis-v" style="color: #6f6f6f;"></i>
                                         </a>
 

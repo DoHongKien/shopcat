@@ -141,10 +141,12 @@
 </div>
 <!-- Cart End -->
 
+<div th:replace="~{fragments :: footer}"></div>
+
 <script>
 
     if([[${anotherChooseProduct != null}]]) {
-        showAlert('warning', 'Lỗi', "[[${anotherChooseProduct}]]")
+        showAlert('warning', 'Cảnh báo', "[[${anotherChooseProduct}]]")
     }
 
     if([[${quantityGreater != null}]]) {

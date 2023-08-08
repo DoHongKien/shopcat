@@ -94,8 +94,8 @@ public class BuyNowController {
         ProductInfo productInfo = (ProductInfo) session.getAttribute("productInfo");
         Product product = productService.findById(productInfo.getId());
 
-        Invoice invoice = new Invoice(user, productInfo.getTotalAmount(), new Date(), true);
-        InvoiceDetail invoiceDetail = new InvoiceDetail(product, productInfo.getQty(), productInfo.getPrice(), true);
+        Invoice invoice = new Invoice(user, productInfo.getTotalAmount(), new Date(), "Đang xử lý");
+        InvoiceDetail invoiceDetail = new InvoiceDetail(product, productInfo.getName(), productInfo.getQty(), productInfo.getPrice());
         invoice.addInvoiceDetail(invoiceDetail);
 
         invoiceService.saveInvoice(invoice);

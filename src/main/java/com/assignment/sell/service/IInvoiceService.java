@@ -17,7 +17,17 @@ public interface IInvoiceService {
 
     List<InvoiceDto> findInvoiceDetailByInvoice(Integer invoiceId);
 
+    List<Invoice> findAllWithProduct();
+
+    List<Invoice> findAllWithProduct(Integer userId);
+
+    List<Invoice> findAllWithProductByStatus(String status);
+
+    List<Invoice> findAllWithProductByStatus(Integer userId, String status);
+
     Invoice saveInvoice(Invoice invoice);
 
     void deleteInvoice(Integer id);
+
+    int updateStatusInvoice(Integer invoiceId, String status);
 }

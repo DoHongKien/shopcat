@@ -2,6 +2,7 @@ package com.assignment.user.service;
 
 import com.assignment.entity.Role;
 import com.assignment.entity.User;
+import com.assignment.exception.UserNotFoundException;
 import com.assignment.user.repository.RoleRepository;
 import com.assignment.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User findByVerficationCode(String code) {
+        return userRepository.findByVerificationCode(code);
+    }
+
+    @Override
     public User saveUser(User user) {
         boolean isUpdating = (user.getId() != null);
         LocalDateTime now = LocalDateTime.now();
@@ -100,8 +106,52 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void updateVerificationCode(String code, String email) throws UserNotFoundException {
+        User user = userRepository.findUserByEmail(email);
+
+        if(user != null) {
+            user.setVerificationCode(code);
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("Không tìm thấy người dùng nào có email: " + email);
+        }
+    }
+
+    @Override
+    public void updateStatusAfterWhenVerification(User user) {
+        user.setStatus(true);
+        user.setVerificationCode(null);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
+        User user = userRepository.findUserByEmail(email);
+
+        if(user != null) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("Không tìm thấy người dùng nào có email: " + email);
+        }
+    }
+
+    @Override
+    public User findByPasswordToken(String passwordToken) {
+        return userRepository.findByResetPasswordToken(passwordToken);
+    }
+
+    @Override
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        String encodePassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodePassword);
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
     }
 
     private void encodePassword(User user) {

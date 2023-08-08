@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class InvoiceService implements IInvoiceService{
+public class InvoiceService implements IInvoiceService {
 
     private InvoiceRepository invoiceRepository;
 
@@ -41,6 +41,26 @@ public class InvoiceService implements IInvoiceService{
     }
 
     @Override
+    public List<Invoice> findAllWithProduct() {
+        return invoiceRepository.findAllWithProduct();
+    }
+
+    @Override
+    public List<Invoice> findAllWithProduct(Integer userId) {
+        return invoiceRepository.findAllWithProduct(userId);
+    }
+
+    @Override
+    public List<Invoice> findAllWithProductByStatus(String status) {
+        return invoiceRepository.findAllWithProductByStatus(status);
+    }
+
+    @Override
+    public List<Invoice> findAllWithProductByStatus(Integer userId, String status) {
+        return invoiceRepository.findAllWithProductByStatus(userId, status);
+    }
+
+    @Override
     public Invoice saveInvoice(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
@@ -48,5 +68,15 @@ public class InvoiceService implements IInvoiceService{
     @Override
     public void deleteInvoice(Integer id) {
         invoiceRepository.deleteById(id);
+    }
+
+    @Override
+    public int updateStatusInvoice(Integer invoiceId, String status) {
+        return switch (status) {
+            case "Đang giao hàng" -> invoiceRepository.updateStatusInvoice(invoiceId, "Đang giao hàng");
+            case "Đã hoàn thành" -> invoiceRepository.updateStatusInvoice(invoiceId, "Đã hoàn thành");
+            case "Đã hủy" -> invoiceRepository.updateStatusInvoice(invoiceId, "Đã hủy");
+            default -> 0;
+        };
     }
 }

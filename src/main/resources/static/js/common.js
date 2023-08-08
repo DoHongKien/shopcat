@@ -3,6 +3,7 @@ $(document).ready(function () {
         e.preventDefault();
         document.logoutForm.submit();
     });
+    showDropdown();
 });
 
 function clearSearch() {
@@ -27,17 +28,17 @@ document.addEventListener("DOMContentLoaded", function () {
         element.textContent = addCommasToNumber(number);
     });
 });
-//
-// function showDropdown() {
-//     $('.navbar .dropdown').hover(
-//         function () {
-//             $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
-//         },
-//         function () {
-//             $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
-//         }
-//     );
-//     $('.dropdown > a').click(function () {
-//         location.href = this.href;
-//     });
-// }
+
+function showDropdown() {
+    $('.navbar .dropdown').hover(
+        function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
+        },
+        function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
+        }
+    );
+    $('.dropdown > a').click(function () {
+        location.href = this.href;
+    });
+}

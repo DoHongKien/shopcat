@@ -186,6 +186,10 @@ public class AddToCartController {
 
         List<ProductInCart> productInCarts = (List<ProductInCart>) session.getAttribute("productCartPayment");
 
+        System.out.println("-------------------------------");
+        productInCarts.forEach(f -> System.out.println(f.getProductName() + " | " + f.getQuantity() + " | " + f.getPrice()));
+        System.out.println("-------------------------------");
+
         int userId = UserDetail.getId();
         User user = userService.findById(userId);
 
@@ -194,15 +198,16 @@ public class AddToCartController {
             totalAmount = totalAmount.add(pic.getPrice().multiply(BigDecimal.valueOf(pic.getQuantity())));
         }
 
-        Invoice invoice = new Invoice(user, totalAmount, new Date(), true);
+        Invoice invoice = new Invoice(user, totalAmount, new Date(), "Đang xử lý");
         invoiceService.saveInvoice(invoice);
 
         Product product = new Product();
         for (ProductInCart pic : productInCarts) {
             product.setId(pic.getProductId());
-            InvoiceDetail invoiceDetail = new InvoiceDetail(product, pic.getQuantity(),
-                    pic.getPrice().multiply(BigDecimal.valueOf(pic.getQuantity())), true);
-            invoice.addInvoiceDetail(invoiceDetail);
+            InvoiceDetail invoiceDetail = new InvoiceDetail(product, pic.getProductName(), pic.getQuantity(),
+                    pic.getPrice().multiply(BigDecimal.valueOf(pic.getQuantity())));
+            System.out.println("INVOICE DETAIL: " + invoiceDetail.getId());
+            invoiceDetail.setInvoice(invoice);
             invoiceDetailService.saveInvoiceDetail(invoiceDetail);
 
             // Update quantity product

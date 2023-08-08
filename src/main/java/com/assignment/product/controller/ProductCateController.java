@@ -20,7 +20,7 @@ public class ProductCateController {
     @GetMapping
     public String showProductCate(Model model) {
 
-        List<ProductCategory> productCategories = service.findAllPrductCate();
+        List<ProductCategory> productCategories = service.findAllProductCate();
 
         model.addAttribute("productCategory", new ProductCategory());
         model.addAttribute("productCategories", productCategories);
@@ -31,7 +31,7 @@ public class ProductCateController {
     @GetMapping("/detail/{id}")
     public String detailProductCate(@PathVariable("id") Integer id, Model model){
 
-        List<ProductCategory> productCategories = service.findAllPrductCate();
+        List<ProductCategory> productCategories = service.findAllProductCate();
         ProductCategory productCategory = service.findById(id);
 
         model.addAttribute("productCategories", productCategories);

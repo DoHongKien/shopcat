@@ -32,12 +32,12 @@ public class Invoice {
     private Date paymentDate;
 
     @Column(name = "status")
-    private boolean status;
+    private String status;
 
     @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+    private List<InvoiceDetail> invoiceDetails;
 
-    public Invoice(User user, BigDecimal totalAmount, Date paymentDate, boolean status) {
+    public Invoice(User user, BigDecimal totalAmount, Date paymentDate, String status) {
         this.user = user;
         this.totalAmount = totalAmount;
         this.paymentDate = paymentDate;

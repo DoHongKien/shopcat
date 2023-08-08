@@ -49,6 +49,7 @@
             <th>Số lượng SP</th>
             <th>Tổng tiền(VNĐ)</th>
             <th>Ngày thanh toán</th>
+            <th>Trạng thái</th>
             <th>Chi tiết</th>
         </tr>
         </thead>
@@ -59,6 +60,7 @@
             <td>[[${invoice.totalProduct}]]</td>
             <td>[[${invoice.totalAmount}]]</td>
             <td>[[${invoice.paymentDate}]]</td>
+            <td>[[${invoice.status}]]</td>
             <td>
                 <a href="#" class="btn btn-primary rounded open-modal" th:data-id="${invoice.invoiceId}"
                    data-bs-toggle="modal" data-bs-target="#myModal">
@@ -135,7 +137,6 @@
                         <th>Sản phẩm</th>
                         <th>Số lượng</th>
                         <th>Giá</th>
-                        <th>Trạng thái</th>
                     </tr>
                     </thead>
 
@@ -153,6 +154,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="~{fragments :: footer}"></div>
 
 <script>
 
@@ -179,13 +182,11 @@
                 success: function (result) {
                     $('#invoiceDetail tbody').empty();
                     $.each(result, function (i, invoice) {
-                        var status = invoice.status === true ? 'Đã thanh toán' : 'Chưa thanh toán';
                         const row = '<tr>' +
                             '<td>' + invoice.userName + '</td>' +
                             '<td>' + invoice.productName + '</td>' +
                             '<td>' + invoice.quantity + '</td>' +
                             '<td>' + invoice.price + '</td>' +
-                            '<td>' + status + '</td>' +
                             '</tr>';
                         $('#invoiceDetail tbody').append(row);
                     });

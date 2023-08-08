@@ -26,19 +26,18 @@ public class InvoiceDetail {
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+    private String name;
+
     @Column(name = "quantity")
     private Integer quantity;
 
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "status")
-    private boolean status;
-
-    public InvoiceDetail(Product product, Integer quantity, BigDecimal price, boolean status) {
+    public InvoiceDetail(Product product, String name, Integer quantity, BigDecimal price) {
         this.product = product;
+        this.name = name;
         this.quantity = quantity;
         this.price = price;
-        this.status = status;
     }
 }

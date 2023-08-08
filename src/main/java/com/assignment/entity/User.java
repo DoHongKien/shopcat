@@ -53,6 +53,12 @@ public class User {
     @Column(name = "status")
     private boolean status;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",

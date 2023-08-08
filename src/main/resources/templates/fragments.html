@@ -25,33 +25,44 @@
                 <ul class="navbar-nav">
                     <th:block sec:authorize="hasAuthority('ADMIN')">
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/products}">Product</a>
+                            <a class="nav-link" th:href="@{/products}">Sản phẩm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/product-cate}">Product
-                                Category</a>
+                            <a class="nav-link" th:href="@{/product-cate}">Thể loại sản phẩm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/users}">User</a>
+                            <a class="nav-link" th:href="@{/users}">Người dùng</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/show-invoice}">Invoice</a>
+                            <a class="nav-link" th:href="@{/show-invoice}">Hóa đơn</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/promotion/show}">Promotion</a>
+                            <a class="nav-link" th:href="@{/promotion/show}">Giảm giá</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/statistics}">Statistic</a>
+                            <a class="nav-link" th:href="@{/statistics}">Thống kê</a>
                         </li>
                     </th:block>
 
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/profile}"
-                           sec:authentication="principal.fullname"></a>
+                    <li class="nav-item dropdown">
+                        <th:block sec:authorize="!isAuthenticated()">
+                            <div class="nav-link dropdown-toggle" data-toggle="dropdown">Khách</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" th:href="@{/login}">Đăng nhập</a>
+                            </div>
+                        </th:block>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                               th:href="@{/profile}"
+                               sec:authentication="principal.fullName"></a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" th:href="@{/invoice/info-invoice}">Đơn mua</a>
+                                <a class="dropdown-item" id="logoutLink" href=""
+                                   sec:authorize="hasAnyAuthority('USER', 'ADMIN')">Đăng xuất</a>
+                            </div>
+                        </th:block>
                     </li>
-                    <li class="nav-item" sec:authorize="hasAnyAuthority('USER', 'ADMIN')">
-                        <a class="nav-link" id="logoutLink" href="">Logout</a>
-                    </li>
+
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
@@ -77,8 +88,10 @@
                     <h1 class="mb-4 display-5 font-weight-bold">CozyCats</h1>
                 </a>
                 <p class="text-dark ">1 quả shop bán rất nhiều mèo cute, đáng yêu.</p>
-                <p class="text-dark mb-2"><i class="fa fa-map-marker-alt color-orange-bold mr-3"></i>Long Hưng, Văn Giang, Hưng Yên</p>
-                <p class="text-dark mb-2"><i class="fa fa-envelope color-orange-bold mr-3"></i>dohongkien2003@gmail.com</p>
+                <p class="text-dark mb-2"><i class="fa fa-map-marker-alt color-orange-bold mr-3"></i>Long Hưng, Văn
+                    Giang, Hưng Yên</p>
+                <p class="text-dark mb-2"><i class="fa fa-envelope color-orange-bold mr-3"></i>dohongkien2003@gmail.com
+                </p>
                 <p class="text-dark mb-0"><i class="fa fa-phone-alt color-orange-bold mr-3"></i>+84969951201</p>
             </div>
             <div class="col-lg-8 col-md-12">
@@ -93,9 +106,12 @@
                     <div class="col-md-3 mb-1">
                         <h5 class="font-weight-bold text-dark mb-4">Tóm tắt</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2 text-decoration-none" th:href="@{/cat}"><i class="fas fa-home-alt mr-2"></i>Trang chủ</a>
-                            <a class="text-dark mb-2 text-decoration-none" th:href="@{profile}"><i class="far fa-user mr-2"></i>Hồ sơ</a>
-                            <a class="text-dark mb-2 text-decoration-none" th:href="@{add-to-cart/view-cart}"><i class="fas fa-shopping-cart mr-2"></i>Giỏ hàng</a>
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{/cat}"><i
+                                    class="fas fa-home-alt mr-2"></i>Trang chủ</a>
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{profile}"><i
+                                    class="far fa-user mr-2"></i>Hồ sơ</a>
+                            <a class="text-dark mb-2 text-decoration-none" th:href="@{add-to-cart/view-cart}"><i
+                                    class="fas fa-shopping-cart mr-2"></i>Giỏ hàng</a>
                         </div>
                     </div>
 
@@ -103,7 +119,8 @@
                         <h5 class="font-weight-bold text-dark mb-4">Liên hệ</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-facebook mr-2"></i>Facebook</a>
-                            <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-instagram mr-2"></i>Instagram</a>
+                            <a class="text-dark mb-2 text-decoration-none" href="#"><i
+                                    class="fab fa-instagram mr-2"></i>Instagram</a>
                             <a class="text-dark mb-2 text-decoration-none" href="#"><i class="fab fa-youtube mr-2"></i>Youtube</a>
                         </div>
                     </div>
